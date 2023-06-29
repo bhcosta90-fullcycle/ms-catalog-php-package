@@ -67,8 +67,8 @@ test("exception min name", function () {
 
 test("exception max name", function () {
     new Category(
-        name: str_repeat('n', 255),
-        description: 'ne',
+        name: str_repeat('n', 256),
+        description: 'testing',
         isActive: true,
     );
 })->throws(EntityValidationException::class);

@@ -15,7 +15,6 @@ class Genre
     
     public function __construct(
         protected string $name,
-        protected ?string $description = null,
         protected bool $isActive = true,
         protected ?Uuid $id = null,
         protected ?DateTime $createdAt = null,
@@ -36,10 +35,9 @@ class Genre
         $this->isActive = false;
     }
 
-    public function update(string $name, ?string $description)
+    public function update(string $name)
     {
         $this->name = $name;
-        $this->description = $description;
 
         $this->validate();
     }
@@ -49,9 +47,5 @@ class Genre
         DomainValidation::make($this->name)
             ->strMinLength()
             ->strMaxLength();
-
-        DomainValidation::make($this->description)
-            ->strCanNullMinLength()
-            ->strCanNullMaxLength();
     }
 }
