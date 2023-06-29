@@ -15,7 +15,7 @@ test("create a new domain", function () {
     $entity->shouldReceive('createdAt');
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
-    $repository->shouldReceive('insert')->andReturn(true);
+    $repository->shouldReceive('insert')->andReturn($entity);
 
     $useCase = new CreateCategoryUseCase(
         repository: $repository
@@ -26,7 +26,7 @@ test("create a new domain", function () {
     ));
     
     expect($response)->toBeInstanceOf(Output::class);
-    expect($response->id)->not->toBeEmpty((string) $id);
+    expect($response->id)->toBe((string) $id);
     expect($response->name)->toBe($data[0]);
     expect($response->description)->toBeNull();
     $repository->shouldHaveReceived('insert')->times(1);

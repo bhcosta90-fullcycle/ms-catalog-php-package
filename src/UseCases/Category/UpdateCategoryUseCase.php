@@ -26,13 +26,13 @@ class UpdateCategoryUseCase
 
         $domain->update(name: $input->name, description: $input->description);
 
-        $this->repository->update($domain);
+        $newDomain = $this->repository->update($domain);
 
         return new DTO\UpdateCategory\Output(
-            id: $domain->id(),
-            name: $domain->name,
-            is_active: $domain->isActive,
-            created_at: $domain->createdAt(),
+            id: $newDomain->id(),
+            name: $newDomain->name,
+            is_active: $newDomain->isActive,
+            created_at: $newDomain->createdAt(),
         );
     }
 }

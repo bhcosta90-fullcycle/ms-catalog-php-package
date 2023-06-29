@@ -21,7 +21,7 @@ test("update a domain when I wanna enable", function () {
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
     $repository->shouldReceive('getById')->andReturn($entity);
-    $repository->shouldReceive('update')->andReturn(true);
+    $repository->shouldReceive('update')->andReturn($entity);
 
     $useCase = new UpdateCategoryUseCase(
         repository: $repository
@@ -59,7 +59,7 @@ test("update a domain when I wanna disabled", function () {
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
     $repository->shouldReceive('getById')->andReturn($entity);
-    $repository->shouldReceive('update')->andReturn(true);
+    $repository->shouldReceive('update')->andReturn($entity);
 
     $useCase = new UpdateCategoryUseCase(
         repository: $repository

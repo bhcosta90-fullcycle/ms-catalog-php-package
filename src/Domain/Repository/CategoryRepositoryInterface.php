@@ -10,7 +10,7 @@ use BRCas\MV\Domain\Entity\Category;
 
 interface CategoryRepositoryInterface
 {
-    public function insert(Category $category): bool;
+    public function insert(Category $category): Category;
     
     public function all(): ItemInterface;
 
@@ -18,7 +18,7 @@ interface CategoryRepositoryInterface
 
     public function getById(string $id): Category;
 
-    public function update(Category $category): bool;
+    public function update(Category $category): Category;
 
     public function delete(Category $category): bool;
 }
