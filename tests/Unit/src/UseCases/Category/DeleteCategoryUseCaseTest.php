@@ -4,7 +4,7 @@ use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Entity\Category;
 use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
 use BRCas\MV\UseCases\Category\DeleteCategoryUseCase;
-use BRCas\MV\UseCases\Category\DTO\DeleteCategory\Input;
+use BRCas\MV\UseCases\Category\DTO\CategoryInput as Input;
 use BRCas\MV\UseCases\Category\DTO\DeleteCategory\Output;
 
 test("delete the domain when the result is positive", function () {

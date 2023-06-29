@@ -14,7 +14,7 @@ class DeleteCategoryUseCase
         //
     }
 
-    public function execute(DTO\DeleteCategory\Input $input): DTO\DeleteCategory\Output
+    public function execute(DTO\CategoryInput $input): DTO\DeleteCategory\Output
     {
         $domain = $this->repository->getById($input->id);
         $success = $this->repository->delete($domain);

@@ -5,7 +5,7 @@ use BRCas\MV\Domain\Entity\Category;
 use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
 use BRCas\MV\UseCases\Category\UpdateCategoryUseCase;
 use BRCas\MV\UseCases\Category\DTO\UpdateCategory\Input;
-use BRCas\MV\UseCases\Category\DTO\UpdateCategory\Output;
+use BRCas\MV\UseCases\Category\DTO\CategoryOutput as Output;
 
 test("update a domain when I wanna enable", function () {
     $entity = Mockery::mock(Category::class, $data = [

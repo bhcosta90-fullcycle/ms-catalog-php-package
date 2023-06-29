@@ -5,7 +5,7 @@ use BRCas\MV\Domain\Entity\Category;
 use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
 use BRCas\MV\UseCases\Category\CreateCategoryUseCase;
 use BRCas\MV\UseCases\Category\DTO\CreateCategory\Input;
-use BRCas\MV\UseCases\Category\DTO\CreateCategory\Output;
+use BRCas\MV\UseCases\Category\DTO\CategoryOutput as Output;
 
 test("create a new domain", function () {
     $entity = Mockery::mock(Category::class, $data = [

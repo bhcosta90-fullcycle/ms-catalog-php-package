@@ -14,7 +14,7 @@ class ListGenresUseCase
         //
     }
 
-    public function execute(DTO\ListGenres\Input $input): DTO\ListGenres\Output
+    public function execute(): DTO\ListGenres\Output
     {
         $domains = $this->repository->paginate();
 

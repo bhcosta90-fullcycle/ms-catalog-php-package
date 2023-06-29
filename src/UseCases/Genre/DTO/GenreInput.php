@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BRCas\MV\UseCases\Category\DTO\ListCategory;
+namespace BRCas\MV\UseCases\Genre\DTO;
 
-class Input
+class GenreInput
 {
     public function __construct(
         public string $id,

@@ -14,7 +14,7 @@ class ListCategoriesUseCase
         //
     }
 
-    public function execute(DTO\ListCategories\Input $input): DTO\ListCategories\Output
+    public function execute(): DTO\ListCategories\Output
     {
         $domains = $this->repository->paginate();
 

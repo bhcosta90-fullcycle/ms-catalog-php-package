@@ -15,7 +15,7 @@ class CreateCategoryUseCase
         //
     }
 
-    public function execute(DTO\CreateCategory\Input $input): DTO\CreateCategory\Output
+    public function execute(DTO\CreateCategory\Input $input): DTO\CategoryOutput
     {
         $domain = new Category(
             name: $input->name,
@@ -25,7 +25,7 @@ class CreateCategoryUseCase
 
         $newDomain = $this->repository->insert($domain);
 
-        return new DTO\CreateCategory\Output(
+        return new DTO\CategoryOutput(
             id: $newDomain->id(),
             name: $newDomain->name,
             description: $newDomain->description,

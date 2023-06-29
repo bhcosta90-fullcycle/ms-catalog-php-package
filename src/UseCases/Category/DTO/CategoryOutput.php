@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BRCas\MV\UseCases\Category\DTO\UpdateCategory;
+namespace BRCas\MV\UseCases\Category\DTO;
 
-class Output
+class CategoryOutput
 {
     public function __construct(
         public string $id,

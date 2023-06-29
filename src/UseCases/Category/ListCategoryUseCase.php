@@ -14,12 +14,13 @@ class ListCategoryUseCase
         //
     }
 
-    public function execute(DTO\ListCategory\Input $input): DTO\ListCategory\Output
+    public function execute(DTO\CategoryInput $input): DTO\CategoryOutput
     {
         $domain = $this->repository->getById($input->id);
-        return new DTO\ListCategory\Output(
+        return new DTO\CategoryOutput(
             id: $domain->id(),
             name: $domain->name,
+            description: $domain->description,
             is_active: $domain->isActive,
             created_at: $domain->createdAt(),
         );

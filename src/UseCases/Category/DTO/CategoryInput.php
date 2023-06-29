@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BRCas\MV\UseCases\Category\DTO\DeleteCategory;
+namespace BRCas\MV\UseCases\Category\DTO;
 
-class Input
+class CategoryInput
 {
     public function __construct(
         public string $id,
