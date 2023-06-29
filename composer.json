@@ -18,6 +18,12 @@
     "require": {
         "ramsey/uuid": "^4.7"
     },
+    "scripts": {
+        "tests": [
+            "./vendor/bin/pest",
+            "./vendor/bin/infection --test-framework=pest"
+        ]
+    },
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require-dev": {
