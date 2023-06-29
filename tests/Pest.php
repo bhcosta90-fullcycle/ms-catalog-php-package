@@ -24,7 +24,10 @@
 |
 */
 
+use BRCas\CA\Repository\ItemInterface;
+use BRCas\CA\Repository\KeyValueInterface;
 use BRCas\CA\Repository\PaginateInterface;
+use BRCas\CA\UseCase\DatabaseTransactionInterface;
 
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
@@ -41,7 +44,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function mockPaginate($items = [])
+function mockPaginate($items = []): PaginateInterface
 {
     $mockItem = Mockery::mock(PaginateInterface::class);
     $mockItem->shouldReceive('items')->andReturn($items);
@@ -54,4 +57,26 @@ function mockPaginate($items = [])
     $mockItem->shouldReceive('from')->andReturn(0);
 
     return $mockItem;
+}
+
+function mockItem($items = []): ItemInterface
+{
+    $mockItem = Mockery::mock(ItemInterface::class);
+    $mockItem->shouldReceive('items')->andReturn($items);
+    $mockItem->shouldReceive('total')->andReturn(count($items));
+    return $mockItem;
+}
+
+function mockKeyValue($items = []): KeyValueInterface
+{
+    $mockItem = Mockery::mock(KeyValueInterface::class);
+    $mockItem->shouldReceive('items')->andReturn($items);
+    return $mockItem;
+}
+
+function mockTransaction(): DatabaseTransactionInterface{
+    $mock = Mockery::mock(DatabaseTransactionInterface::class);
+    $mock->shouldReceive('commit')->shouldReceive('rollback');
+
+    return $mock;
 }

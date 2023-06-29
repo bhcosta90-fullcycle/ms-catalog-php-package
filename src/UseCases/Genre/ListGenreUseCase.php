@@ -20,6 +20,7 @@ class ListGenreUseCase
         return new DTO\GenreOutput(
             id: $domain->id(),
             name: $domain->name,
+            categories: $domain->categories,
             is_active: $domain->isActive,
             created_at: $domain->createdAt(),
         );
