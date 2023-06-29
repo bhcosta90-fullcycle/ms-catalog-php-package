@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Core\UseCases\Category;
+
+use Core\Domain\Repository\CategoryRepositoryInterface;
+
+class ListCategoriesUseCase
+{
+    public function __construct(
+        protected CategoryRepositoryInterface $repository,
+    ) {
+        //
+    }
+
+    public function execute(DTO\ListCategoriesInput $input): DTO\ListCategoriesOutput
+    {
+        $domains = $this->repository->paginate();
+
+        return new DTO\ListCategoriesOutput(
+            items: $domains->items(),
+            total: $domains->total(),
+            last_page: $domains->lastPage(),
+            first_page: $domains->firstPage(),
+            current_page: $domains->currentPage(),
+            per_page: $domains->perPage(),
+            to: $domains->to(),
+            from: $domains->from(),
+        );
+    }
+}
