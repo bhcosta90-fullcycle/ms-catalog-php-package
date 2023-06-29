@@ -4,8 +4,8 @@ use BRCas\CA\Domain\ValueObject\Uuid;
 use Core\Domain\Entity\Category;
 use Core\Domain\Repository\CategoryRepositoryInterface;
 use Core\UseCases\Category\UpdateCategoryUseCase;
-use Core\UseCases\Category\DTO\UpdateCategoryInput;
-use Core\UseCases\Category\DTO\UpdateCategoryOutput;
+use Core\UseCases\Category\DTO\UpdateCategory\Input;
+use Core\UseCases\Category\DTO\UpdateCategory\Output;
 
 test("update a domain when I wanna enable", function () {
     $entity = Mockery::mock(Category::class, $data = [
@@ -26,13 +26,13 @@ test("update a domain when I wanna enable", function () {
         repository: $repository
     );
 
-    $response = $useCase->execute(new UpdateCategoryInput(
+    $response = $useCase->execute(new Input(
         id: $data[3],
         name: $data[0],
         isActive: $data[2]
     ));
 
-    expect($response)->toBeInstanceOf(UpdateCategoryOutput::class);
+    expect($response)->toBeInstanceOf(Output::class);
     expect($response->id)->toBe((string) $id);
     expect($response->name)->toBe($data[0]);
     expect($response->is_active)->toBe($active);
@@ -63,13 +63,13 @@ test("update a domain when I wanna disabled", function () {
         repository: $repository
     );
 
-    $response = $useCase->execute(new UpdateCategoryInput(
+    $response = $useCase->execute(new Input(
         id: $data[3],
         name: $data[0],
         isActive: $data[2]
     ));
 
-    expect($response)->toBeInstanceOf(UpdateCategoryOutput::class);
+    expect($response)->toBeInstanceOf(Output::class);
     expect($response->id)->toBe((string) $id);
     expect($response->name)->toBe($data[0]);
     expect($response->is_active)->toBe($active);

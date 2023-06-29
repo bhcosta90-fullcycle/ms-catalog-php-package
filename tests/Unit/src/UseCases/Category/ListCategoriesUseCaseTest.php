@@ -3,8 +3,8 @@
 use BRCas\CA\Domain\ValueObject\Uuid;
 use Core\Domain\Repository\CategoryRepositoryInterface;
 use Core\UseCases\Category\ListCategoriesUseCase;
-use Core\UseCases\Category\DTO\ListCategoriesInput;
-use Core\UseCases\Category\DTO\ListCategoriesOutput;
+use Core\UseCases\Category\DTO\ListCategories\Input;
+use Core\UseCases\Category\DTO\ListCategories\Output;
 
 test("list all when is empty", function () {
     $mockItem = mockPaginate();
@@ -16,9 +16,9 @@ test("list all when is empty", function () {
         repository: $repository
     );
 
-    $response = $useCase->execute(new ListCategoriesInput());
+    $response = $useCase->execute(new Input());
 
-    expect($response)->toBeInstanceOf(ListCategoriesOutput::class);
+    expect($response)->toBeInstanceOf(Output::class);
     expect($response->items)->toHaveCount(0);
     expect($response->total)->toBe(0);
     expect($response->first_page)->toBe(0);
@@ -46,9 +46,9 @@ test("list all when is not empty", function () {
         repository: $repository
     );
 
-    $response = $useCase->execute(new ListCategoriesInput());
+    $response = $useCase->execute(new Input());
 
-    expect($response)->toBeInstanceOf(ListCategoriesOutput::class);
+    expect($response)->toBeInstanceOf(Output::class);
     expect($response->items)->toHaveCount(1);
     expect($response->total)->toBe(0);
     expect($response->first_page)->toBe(0);

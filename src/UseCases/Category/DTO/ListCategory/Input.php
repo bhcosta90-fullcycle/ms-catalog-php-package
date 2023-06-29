@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Core\UseCases\Category\DTO;
+namespace Core\UseCases\Category\DTO\ListCategory;
 
-class ListCategoryInput
+class Input
 {
     public function __construct(
         public string $id,

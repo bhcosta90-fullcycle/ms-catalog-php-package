@@ -14,11 +14,11 @@ class ListCategoriesUseCase
         //
     }
 
-    public function execute(DTO\ListCategoriesInput $input): DTO\ListCategoriesOutput
+    public function execute(DTO\ListCategories\Input $input): DTO\ListCategories\Output
     {
         $domains = $this->repository->paginate();
 
-        return new DTO\ListCategoriesOutput(
+        return new DTO\ListCategories\Output(
             items: $domains->items(),
             total: $domains->total(),
             last_page: $domains->lastPage(),

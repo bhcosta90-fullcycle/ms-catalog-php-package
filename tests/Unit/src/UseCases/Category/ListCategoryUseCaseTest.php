@@ -4,8 +4,8 @@ use BRCas\CA\Domain\ValueObject\Uuid;
 use Core\Domain\Entity\Category;
 use Core\Domain\Repository\CategoryRepositoryInterface;
 use Core\UseCases\Category\ListCategoryUseCase;
-use Core\UseCases\Category\DTO\ListCategoryInput;
-use Core\UseCases\Category\DTO\ListCategoryOutput;
+use Core\UseCases\Category\DTO\ListCategory\Input;
+use Core\UseCases\Category\DTO\ListCategory\Output;
 
 test("list a category", function () {
     $entity = Mockery::mock(Category::class, $data = [
@@ -20,11 +20,11 @@ test("list a category", function () {
         repository: $repository
     );
     
-    $response = $useCase->execute(new ListCategoryInput(
+    $response = $useCase->execute(new Input(
         id: $id
     ));
     
-    expect($response)->toBeInstanceOf(ListCategoryOutput::class);
+    expect($response)->toBeInstanceOf(Output::class);
     expect($response->id)->toBe((string) $id);
     expect($response->name)->toBe($data[0]);
     expect($response->description)->toBeNull();

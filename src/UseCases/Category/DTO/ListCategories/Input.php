@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Core\UseCases\Category\DTO;
+namespace Core\UseCases\Category\DTO\ListCategories;
 
-class ListCategoriesInput
+class Input
 {
     public function __construct()
     {

@@ -14,10 +14,10 @@ class ListCategoryUseCase
         //
     }
 
-    public function execute(DTO\ListCategoryInput $input): DTO\ListCategoryOutput
+    public function execute(DTO\ListCategory\Input $input): DTO\ListCategory\Output
     {
         $domain = $this->repository->find($input->id);
-        return new DTO\ListCategoryOutput(
+        return new DTO\ListCategory\Output(
             id: $domain->id(),
             name: $domain->name,
             isActive: $domain->isActive,

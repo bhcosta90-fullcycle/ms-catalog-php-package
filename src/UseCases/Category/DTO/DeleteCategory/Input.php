@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Core\UseCases\Category\DTO;
+namespace Core\UseCases\Category\DTO\DeleteCategory;
 
-class DeleteCategoryOutput
+class Input
 {
     public function __construct(
-        public bool $success,
+        public string $id,
     ) {
         //
     }

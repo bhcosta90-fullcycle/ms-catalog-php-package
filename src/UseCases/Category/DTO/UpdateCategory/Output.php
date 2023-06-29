@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Core\UseCases\Category\DTO;
+namespace Core\UseCases\Category\DTO\UpdateCategory;
 
-class UpdateCategoryOutput
+class Output
 {
     public function __construct(
         public string $id,

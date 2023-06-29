@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Core\UseCases\Category\DTO;
+namespace Core\UseCases\Category\DTO\CreateCategory;
 
-class UpdateCategoryInput
+class Output
 {
     public function __construct(
         public string $id,
         public string $name,
         public ?string $description = null,
-        public bool $isActive = true,
+        public bool $is_active = true,
     ) {
         //
     }

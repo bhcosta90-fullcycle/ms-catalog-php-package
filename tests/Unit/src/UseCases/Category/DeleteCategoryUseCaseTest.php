@@ -4,8 +4,8 @@ use BRCas\CA\Domain\ValueObject\Uuid;
 use Core\Domain\Entity\Category;
 use Core\Domain\Repository\CategoryRepositoryInterface;
 use Core\UseCases\Category\DeleteCategoryUseCase;
-use Core\UseCases\Category\DTO\DeleteCategoryInput;
-use Core\UseCases\Category\DTO\DeleteCategoryOutput;
+use Core\UseCases\Category\DTO\DeleteCategory\Input;
+use Core\UseCases\Category\DTO\DeleteCategory\Output;
 
 test("delete the domain when the result is positive", function () {
     $entity = Mockery::mock(Category::class, $data = [
@@ -26,11 +26,11 @@ test("delete the domain when the result is positive", function () {
         repository: $repository
     );
 
-    $response = $useCase->execute(new DeleteCategoryInput(
+    $response = $useCase->execute(new Input(
         id: $data[3],
     ));
 
-    expect($response)->toBeInstanceOf(DeleteCategoryOutput::class);
+    expect($response)->toBeInstanceOf(Output::class);
     expect($response->success)->toBeTrue();
     $repository->shouldHaveReceived('find')->times(1);
     $repository->shouldHaveReceived('delete')->times(1);
@@ -55,11 +55,11 @@ test("delete the domain when the result is negative", function () {
         repository: $repository
     );
 
-    $response = $useCase->execute(new DeleteCategoryInput(
+    $response = $useCase->execute(new Input(
         id: $data[3],
     ));
 
-    expect($response)->toBeInstanceOf(DeleteCategoryOutput::class);
+    expect($response)->toBeInstanceOf(Output::class);
     expect($response->success)->toBeFalse();
     $repository->shouldHaveReceived('find')->times(1);
     $repository->shouldHaveReceived('delete')->times(1);

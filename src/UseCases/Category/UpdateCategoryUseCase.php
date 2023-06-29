@@ -14,7 +14,7 @@ class UpdateCategoryUseCase
         //
     }
 
-    public function execute(DTO\UpdateCategoryInput $input): DTO\UpdateCategoryOutput
+    public function execute(DTO\UpdateCategory\Input $input): DTO\UpdateCategory\Output
     {
         $domain = $this->repository->find($input->id);
 
@@ -28,7 +28,7 @@ class UpdateCategoryUseCase
 
         $newDomain = $this->repository->update($domain);
 
-        return new DTO\UpdateCategoryOutput(
+        return new DTO\UpdateCategory\Output(
             id: $newDomain->id(),
             name: $newDomain->name,
             is_active: $newDomain->isActive,

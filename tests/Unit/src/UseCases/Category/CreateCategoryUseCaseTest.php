@@ -4,8 +4,8 @@ use BRCas\CA\Domain\ValueObject\Uuid;
 use Core\Domain\Entity\Category;
 use Core\Domain\Repository\CategoryRepositoryInterface;
 use Core\UseCases\Category\CreateCategoryUseCase;
-use Core\UseCases\Category\DTO\CreateCategoryInput;
-use Core\UseCases\Category\DTO\CreateCategoryOutput;
+use Core\UseCases\Category\DTO\CreateCategory\Input;
+use Core\UseCases\Category\DTO\CreateCategory\Output;
 
 test("create a new domain", function () {
     $entity = Mockery::mock(Category::class, $data = [
@@ -20,11 +20,11 @@ test("create a new domain", function () {
         repository: $repository
     );
     
-    $response = $useCase->execute(new CreateCategoryInput(
+    $response = $useCase->execute(new Input(
         name: $data[0]
     ));
     
-    expect($response)->toBeInstanceOf(CreateCategoryOutput::class);
+    expect($response)->toBeInstanceOf(Output::class);
     expect($response->id)->toBe((string) $id);
     expect($response->name)->toBe($data[0]);
     expect($response->description)->toBeNull();
