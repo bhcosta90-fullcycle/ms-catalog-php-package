@@ -6,6 +6,7 @@
 use BRCas\CA\Domain\Exceptions\EntityValidationException;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Entity\Genre;
+use Ramsey\Uuid\Uuid as UuidUuid;
 
 test('create', function () {
     $genre = new Genre(
@@ -69,3 +70,36 @@ test("exception max name", function () {
         isActive: true,
     );
 })->throws(EntityValidationException::class);
+
+test("add category in genre", function () {
+    $categoryId = (string) UuidUuid::uuid4();
+
+    $genre = new Genre(
+        name: 'testing',
+        isActive: true,
+    );
+
+    $this->assertIsArray($genre->categories);
+    $this->assertCount(0, $genre->categories);
+
+    $genre->addCategory(category: $categoryId);
+    $genre->addCategory(category: $categoryId);
+    $this->assertCount(2, $genre->categories);
+});
+
+test("remove category in genre", function () {
+    $categoryId = 'a3885b3c-f728-4ab5-9d13-52c89c33e587';
+    $categoryId2 = '9a879379-7324-484b-a6d4-611040b5d2fb';
+
+    $genre = new Genre(
+        name: 'testing',
+        isActive: true,
+        categories: [$categoryId, $categoryId2]
+    );
+
+    $this->assertCount(2, $genre->categories);
+    $genre->removeCategory('a3885b3c-f728-4ab5-9d13-52c89c33e587');
+    $this->assertEquals($genre->categories, [
+        '9a879379-7324-484b-a6d4-611040b5d2fb'
+    ]);
+});
