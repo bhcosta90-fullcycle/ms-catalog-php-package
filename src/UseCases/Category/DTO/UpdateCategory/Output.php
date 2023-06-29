@@ -11,6 +11,7 @@ class Output
         public string $name,
         public ?string $description = null,
         public bool $is_active = true,
+        public string $created_at = '',
     ) {
         //
     }

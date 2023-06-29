@@ -29,6 +29,7 @@ class CreateCategoryUseCase
             id: $newDomain->id(),
             name: $newDomain->name,
             is_active: $newDomain->isActive,
+            created_at: $newDomain->createdAt(),
         );
     }
 }

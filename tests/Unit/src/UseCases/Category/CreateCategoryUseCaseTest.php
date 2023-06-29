@@ -12,6 +12,7 @@ test("create a new domain", function () {
         'new category'
     ]);
     $entity->shouldReceive('id')->andReturn($id = Uuid::make());
+    $entity->shouldReceive('createdAt');
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
     $repository->shouldReceive('insert')->andReturn($entity);

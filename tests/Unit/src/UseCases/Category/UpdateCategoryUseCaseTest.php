@@ -16,6 +16,7 @@ test("update a domain when I wanna enable", function () {
     ]);
     $entity->shouldReceive('id')->andReturn($id);
     $entity->shouldReceive('enable');
+    $entity->shouldReceive('createdAt');
     $entity->shouldReceive('update')->with($name, $description);
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
@@ -53,6 +54,7 @@ test("update a domain when I wanna disabled", function () {
     ]);
     $entity->shouldReceive('id')->andReturn($id);
     $entity->shouldReceive('disable');
+    $entity->shouldReceive('createdAt');
     $entity->shouldReceive('update')->with($name, $description);
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
