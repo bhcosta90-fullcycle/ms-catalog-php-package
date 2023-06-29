@@ -16,7 +16,7 @@ class UpdateCategoryUseCase
 
     public function execute(DTO\UpdateCategory\Input $input): DTO\UpdateCategory\Output
     {
-        $domain = $this->repository->find($input->id);
+        $domain = $this->repository->getById($input->id);
 
         if ($input->isActive) {
             $domain->enable();

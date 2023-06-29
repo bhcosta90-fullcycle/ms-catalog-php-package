@@ -14,7 +14,7 @@ test("list a category", function () {
     $entity->shouldReceive('id')->andReturn($id = Uuid::make());
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
-    $repository->shouldReceive('find')->with((string) $id)->andReturn($entity);
+    $repository->shouldReceive('getById')->with((string) $id)->andReturn($entity);
 
     $useCase = new ListCategoryUseCase(
         repository: $repository
@@ -28,5 +28,5 @@ test("list a category", function () {
     expect($response->id)->toBe((string) $id);
     expect($response->name)->toBe($data[0]);
     expect($response->description)->toBeNull();
-    $repository->shouldHaveReceived('find')->times(1);
+    $repository->shouldHaveReceived('getById')->times(1);
 });

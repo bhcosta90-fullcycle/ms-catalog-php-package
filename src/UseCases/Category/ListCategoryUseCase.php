@@ -16,7 +16,7 @@ class ListCategoryUseCase
 
     public function execute(DTO\ListCategory\Input $input): DTO\ListCategory\Output
     {
-        $domain = $this->repository->find($input->id);
+        $domain = $this->repository->getById($input->id);
         return new DTO\ListCategory\Output(
             id: $domain->id(),
             name: $domain->name,

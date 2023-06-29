@@ -19,7 +19,7 @@ test("update a domain when I wanna enable", function () {
     $entity->shouldReceive('update')->with($name, $description);
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
-    $repository->shouldReceive('find')->andReturn($entity);
+    $repository->shouldReceive('getById')->andReturn($entity);
     $repository->shouldReceive('update')->andReturn($entity);
 
     $useCase = new UpdateCategoryUseCase(
@@ -39,7 +39,7 @@ test("update a domain when I wanna enable", function () {
     expect($response->description)->toBeNull();
     $entity->shouldHaveReceived('update')->times(1);
     $entity->shouldHaveReceived('enable')->times(1);
-    $repository->shouldHaveReceived('find')->times(1);
+    $repository->shouldHaveReceived('getById')->times(1);
     $repository->shouldHaveReceived('update')->times(1);
 });
 
@@ -56,7 +56,7 @@ test("update a domain when I wanna disabled", function () {
     $entity->shouldReceive('update')->with($name, $description);
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
-    $repository->shouldReceive('find')->andReturn($entity);
+    $repository->shouldReceive('getById')->andReturn($entity);
     $repository->shouldReceive('update')->andReturn($entity);
 
     $useCase = new UpdateCategoryUseCase(
@@ -75,6 +75,6 @@ test("update a domain when I wanna disabled", function () {
     expect($response->is_active)->toBe($active);
     expect($response->description)->toBe($description);
     $entity->shouldHaveReceived('disable')->times(1);
-    $repository->shouldHaveReceived('find')->times(1);
+    $repository->shouldHaveReceived('getById')->times(1);
     $repository->shouldHaveReceived('update')->times(1);
 });

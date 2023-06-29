@@ -19,7 +19,7 @@ test("delete the domain when the result is positive", function () {
     $entity->shouldReceive('update')->with($name, $description);
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
-    $repository->shouldReceive('find')->andReturn($entity);
+    $repository->shouldReceive('getById')->andReturn($entity);
     $repository->shouldReceive('delete')->andReturn(true);
 
     $useCase = new DeleteCategoryUseCase(
@@ -32,7 +32,7 @@ test("delete the domain when the result is positive", function () {
 
     expect($response)->toBeInstanceOf(Output::class);
     expect($response->success)->toBeTrue();
-    $repository->shouldHaveReceived('find')->times(1);
+    $repository->shouldHaveReceived('getById')->times(1);
     $repository->shouldHaveReceived('delete')->times(1);
 });
 
@@ -48,7 +48,7 @@ test("delete the domain when the result is negative", function () {
     $entity->shouldReceive('update')->with($name, $description);
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
-    $repository->shouldReceive('find')->andReturn($entity);
+    $repository->shouldReceive('getById')->andReturn($entity);
     $repository->shouldReceive('delete')->andReturn(false);
 
     $useCase = new DeleteCategoryUseCase(
@@ -61,6 +61,6 @@ test("delete the domain when the result is negative", function () {
 
     expect($response)->toBeInstanceOf(Output::class);
     expect($response->success)->toBeFalse();
-    $repository->shouldHaveReceived('find')->times(1);
+    $repository->shouldHaveReceived('getById')->times(1);
     $repository->shouldHaveReceived('delete')->times(1);
 });
