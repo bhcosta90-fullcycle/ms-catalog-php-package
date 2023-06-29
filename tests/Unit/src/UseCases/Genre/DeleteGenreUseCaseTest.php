@@ -1,26 +1,26 @@
 <?php
 
 use BRCas\CA\Domain\ValueObject\Uuid;
-use BRCas\MV\Domain\Entity\Category;
-use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
-use BRCas\MV\UseCases\Category\DeleteCategoryUseCase;
-use BRCas\MV\UseCases\Category\DTO\CategoryInput as Input;
-use BRCas\MV\UseCases\Category\DTO\DeleteCategory\Output;
+use BRCas\MV\Domain\Entity\Genre;
+use BRCas\MV\Domain\Repository\GenreRepositoryInterface;
+use BRCas\MV\UseCases\Genre\DeleteGenreUseCase;
+use BRCas\MV\UseCases\Genre\DTO\GenreInput as Input;
+use BRCas\MV\UseCases\Genre\DTO\DeleteGenre\Output;
 
 test("delete the domain when the result is positive", function () {
-    $entity = Mockery::mock(Category::class, $data = [
+    $entity = Mockery::mock(Genre::class, $data = [
         'update category',
-        null,
+        [],
         true,
-        $id = (string) Uuid::make()
+        $id = Uuid::make()
     ]);
     $entity->shouldReceive('id')->andReturn($id);
 
-    $repository = Mockery::mock(CategoryRepositoryInterface::class);
+    $repository = Mockery::mock(GenreRepositoryInterface::class);
     $repository->shouldReceive('getById')->andReturn($entity);
     $repository->shouldReceive('delete')->andReturn(true);
 
-    $useCase = new DeleteCategoryUseCase(
+    $useCase = new DeleteGenreUseCase(
         repository: $repository
     );
 
@@ -35,19 +35,20 @@ test("delete the domain when the result is positive", function () {
 });
 
 test("delete the domain when the result is negative", function () {
-    $entity = Mockery::mock(Category::class, $data = [
+    $entity = Mockery::mock(Genre::class, $data = [
         'update category',
-        null,
+        [],
         true,
-        $id = (string) Uuid::make()
+        $id = Uuid::make()
     ]);
     $entity->shouldReceive('id')->andReturn($id);
+    $entity->shouldReceive('enable');
 
-    $repository = Mockery::mock(CategoryRepositoryInterface::class);
+    $repository = Mockery::mock(GenreRepositoryInterface::class);
     $repository->shouldReceive('getById')->andReturn($entity);
     $repository->shouldReceive('delete')->andReturn(false);
 
-    $useCase = new DeleteCategoryUseCase(
+    $useCase = new DeleteGenreUseCase(
         repository: $repository
     );
 
