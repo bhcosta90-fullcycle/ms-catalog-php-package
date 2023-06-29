@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Core\UseCases\Category\DTO\UpdateCategory;
+namespace BRCas\MV\UseCases\Category\DTO\UpdateCategory;
 
 class Output
 {

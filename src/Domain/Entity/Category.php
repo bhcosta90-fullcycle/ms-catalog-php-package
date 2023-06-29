@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Core\Domain\Entity;
+namespace BRCas\MV\Domain\Entity;
 
 use BRCas\CA\Domain\Traits\MethodMagicsTrait;
 use BRCas\CA\Domain\Validation\DomainValidation;

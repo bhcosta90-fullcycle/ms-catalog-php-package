@@ -1,11 +1,11 @@
 <?php
 
 use BRCas\CA\Domain\ValueObject\Uuid;
-use Core\Domain\Entity\Category;
-use Core\Domain\Repository\CategoryRepositoryInterface;
-use Core\UseCases\Category\ListCategoryUseCase;
-use Core\UseCases\Category\DTO\ListCategory\Input;
-use Core\UseCases\Category\DTO\ListCategory\Output;
+use BRCas\MV\Domain\Entity\Category;
+use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
+use BRCas\MV\UseCases\Category\ListCategoryUseCase;
+use BRCas\MV\UseCases\Category\DTO\ListCategory\Input;
+use BRCas\MV\UseCases\Category\DTO\ListCategory\Output;
 
 test("list a category", function () {
     $entity = Mockery::mock(Category::class, $data = [

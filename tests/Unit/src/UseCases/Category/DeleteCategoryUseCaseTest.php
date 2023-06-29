@@ -1,11 +1,11 @@
 <?php
 
 use BRCas\CA\Domain\ValueObject\Uuid;
-use Core\Domain\Entity\Category;
-use Core\Domain\Repository\CategoryRepositoryInterface;
-use Core\UseCases\Category\DeleteCategoryUseCase;
-use Core\UseCases\Category\DTO\DeleteCategory\Input;
-use Core\UseCases\Category\DTO\DeleteCategory\Output;
+use BRCas\MV\Domain\Entity\Category;
+use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
+use BRCas\MV\UseCases\Category\DeleteCategoryUseCase;
+use BRCas\MV\UseCases\Category\DTO\DeleteCategory\Input;
+use BRCas\MV\UseCases\Category\DTO\DeleteCategory\Output;
 
 test("delete the domain when the result is positive", function () {
     $entity = Mockery::mock(Category::class, $data = [

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Core\UseCases\Category;
+namespace BRCas\MV\UseCases\Category;
 
-use Core\Domain\Entity\Category;
-use Core\Domain\Repository\CategoryRepositoryInterface;
+use BRCas\MV\Domain\Entity\Category;
+use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
 
 class CreateCategoryUseCase
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Core\Domain\Repository;
+namespace BRCas\MV\Domain\Repository;
 
 use BRCas\CA\Repository\ItemInterface;
 use BRCas\CA\Repository\PaginateInterface;
-use Core\Domain\Entity\Category;
+use BRCas\MV\Domain\Entity\Category;
 
 interface CategoryRepositoryInterface
 {

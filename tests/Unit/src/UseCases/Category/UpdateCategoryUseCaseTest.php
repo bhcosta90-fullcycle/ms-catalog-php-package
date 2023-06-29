@@ -1,11 +1,11 @@
 <?php
 
 use BRCas\CA\Domain\ValueObject\Uuid;
-use Core\Domain\Entity\Category;
-use Core\Domain\Repository\CategoryRepositoryInterface;
-use Core\UseCases\Category\UpdateCategoryUseCase;
-use Core\UseCases\Category\DTO\UpdateCategory\Input;
-use Core\UseCases\Category\DTO\UpdateCategory\Output;
+use BRCas\MV\Domain\Entity\Category;
+use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
+use BRCas\MV\UseCases\Category\UpdateCategoryUseCase;
+use BRCas\MV\UseCases\Category\DTO\UpdateCategory\Input;
+use BRCas\MV\UseCases\Category\DTO\UpdateCategory\Output;
 
 test("update a domain when I wanna enable", function () {
     $entity = Mockery::mock(Category::class, $data = [

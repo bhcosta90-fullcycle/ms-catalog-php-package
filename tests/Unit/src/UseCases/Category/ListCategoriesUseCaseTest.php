@@ -1,10 +1,10 @@
 <?php
 
 use BRCas\CA\Domain\ValueObject\Uuid;
-use Core\Domain\Repository\CategoryRepositoryInterface;
-use Core\UseCases\Category\ListCategoriesUseCase;
-use Core\UseCases\Category\DTO\ListCategories\Input;
-use Core\UseCases\Category\DTO\ListCategories\Output;
+use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
+use BRCas\MV\UseCases\Category\ListCategoriesUseCase;
+use BRCas\MV\UseCases\Category\DTO\ListCategories\Input;
+use BRCas\MV\UseCases\Category\DTO\ListCategories\Output;
 
 test("list all when is empty", function () {
     $mockItem = mockPaginate();

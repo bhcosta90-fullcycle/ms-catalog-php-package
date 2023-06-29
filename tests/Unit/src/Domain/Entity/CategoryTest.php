@@ -2,7 +2,7 @@
 
 use BRCas\CA\Domain\Exceptions\EntityValidationException;
 use BRCas\CA\Domain\ValueObject\Uuid;
-use Core\Domain\Entity\Category;
+use BRCas\MV\Domain\Entity\Category;
 
 test('create', function(){
     $category = new Category(

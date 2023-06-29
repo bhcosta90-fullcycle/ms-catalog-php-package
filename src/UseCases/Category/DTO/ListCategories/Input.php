@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Core\UseCases\Category\DTO\ListCategories;
+namespace BRCas\MV\UseCases\Category\DTO\ListCategories;
 
 class Input
 {
