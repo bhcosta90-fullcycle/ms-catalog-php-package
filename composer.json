@@ -15,7 +15,6 @@
         }
     ],
     "require": {
-        "bhcosta90/clean-architecture": "dev-master",
         "ramsey/uuid": "^4.7"
     },
     "minimum-stability": "stable",
