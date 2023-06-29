@@ -20,7 +20,8 @@ class ListCategoryUseCase
         return new DTO\ListCategory\Output(
             id: $domain->id(),
             name: $domain->name,
-            isActive: $domain->isActive,
+            is_active: $domain->isActive,
+            created_at: $domain->createdAt(),
         );
     }
 }

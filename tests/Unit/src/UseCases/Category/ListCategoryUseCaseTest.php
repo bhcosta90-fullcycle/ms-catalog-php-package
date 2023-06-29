@@ -12,6 +12,7 @@ test("list a category", function () {
         'new category'
     ]);
     $entity->shouldReceive('id')->andReturn($id = Uuid::make());
+    $entity->shouldReceive('createdAt')->andReturn('');
 
     $repository = Mockery::mock(CategoryRepositoryInterface::class);
     $repository->shouldReceive('getById')->with((string) $id)->andReturn($entity);
