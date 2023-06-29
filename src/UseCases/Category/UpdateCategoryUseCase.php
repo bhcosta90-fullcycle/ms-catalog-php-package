@@ -31,6 +31,7 @@ class UpdateCategoryUseCase
         return new DTO\UpdateCategory\Output(
             id: $newDomain->id(),
             name: $newDomain->name,
+            description: $newDomain->description,
             is_active: $newDomain->isActive,
             created_at: $newDomain->createdAt(),
         );
