@@ -23,13 +23,13 @@ class CreateCategoryUseCase
             isActive: $input->isActive,
         );
 
-        $newDomain = $this->repository->insert($domain);
+        $this->repository->insert($domain);
 
         return new DTO\CreateCategory\Output(
-            id: $newDomain->id(),
-            name: $newDomain->name,
-            is_active: $newDomain->isActive,
-            created_at: $newDomain->createdAt(),
+            id: $domain->id(),
+            name: $domain->name,
+            is_active: $domain->isActive,
+            created_at: $domain->createdAt(),
         );
     }
 }
