@@ -1,3 +1,5 @@
 vendor
 phpunit.xml.bak
 infection.log
+*bkp*
+*old*
