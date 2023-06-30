@@ -45,11 +45,6 @@ class CreateVideoUseCase
             return $this->output();
         } catch (Throwable $e) {
             $this->transaction->rollback();
-
-            foreach ($files ?? [] as $file) {
-                $this->storage->delete($file);
-            }
-
             throw $e;
         }
     }
