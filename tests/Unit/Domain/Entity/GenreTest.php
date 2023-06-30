@@ -1,12 +1,23 @@
 <?php
 
-// use BRCas\CA\Domain\Exceptions\EntityValidationException;
-// use BRCas\CA\Domain\ValueObject\Uuid;
-
 use BRCas\CA\Domain\Exceptions\EntityValidationException;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Entity\Genre;
 use Ramsey\Uuid\Uuid as UuidUuid;
+
+test('attributes', function () {
+    $domain = new Genre(
+        id: new Uuid($id = (string) UuidUuid::uuid4()),
+        name: 'testing',
+        createdAt: $dateTime = new DateTime(),
+        categories: ['123', '456']
+    );
+
+    expect($domain->id())->toBe($id);
+    expect($domain->name)->toBe('testing');
+    expect($domain->categories)->toBe(['123', '456']);
+    expect($domain->createdAt())->toBe($dateTime->format('Y-m-d H:i:s'));
+});
 
 test('create', function () {
     $genre = new Genre(

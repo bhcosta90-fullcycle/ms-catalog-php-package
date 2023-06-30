@@ -3,6 +3,21 @@
 use BRCas\CA\Domain\Exceptions\EntityValidationException;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Entity\Category;
+use Ramsey\Uuid\Uuid as UuidUuid;
+
+test('attributes', function () {
+    $domain = new Category(
+        id: $id = (string) UuidUuid::uuid4(),
+        name: 'testing',
+        description: 'testing description',
+        createdAt: $dateTime = (new DateTime())->format('Y-m-d H:i:s')
+    );
+
+    expect($domain->id())->toBe($id);
+    expect($domain->name)->toBe('testing');
+    expect($domain->description)->toBe('testing description');
+    expect($domain->createdAt())->toBe($dateTime);
+});
 
 test('create', function(){
     $category = new Category(

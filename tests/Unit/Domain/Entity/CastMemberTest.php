@@ -4,6 +4,21 @@ use BRCas\CA\Domain\Exceptions\EntityValidationException;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Entity\CastMember;
 use BRCas\MV\Domain\Enum\CastMemberType;
+use Ramsey\Uuid\Uuid as UuidUuid;
+
+test('attributes', function(){
+    $domain = new CastMember(
+        id: new Uuid($id = (string) UuidUuid::uuid4()),
+        name: 'testing', 
+        type: CastMemberType::ACTOR,
+        createdAt: $dateTime = new DateTime()
+    );
+
+    expect($domain->id())->toBe($id);
+    expect($domain->name)->toBe('testing');
+    expect($domain->type->value)->toBe(2);
+    expect($domain->createdAt())->toBe($dateTime->format('Y-m-d H:i:s'));
+});
 
 test('create', function(){
     $castMember = new CastMember(name: 'testing', type: CastMemberType::ACTOR);
