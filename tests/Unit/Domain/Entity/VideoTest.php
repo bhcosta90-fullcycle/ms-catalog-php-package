@@ -29,7 +29,7 @@ test('attributes', function () {
     expect($domain->createdAt())->toBe($dateTime->format('Y-m-d H:i:s'));
 });
 
-test('create', function () {
+test('test id and created at not passed', function () {
     $domain = new Video(
         title: 'title',
         description: 'description',
@@ -40,13 +40,6 @@ test('create', function () {
     );
 
     expect($domain->id())->not->toBeEmpty();
-    expect($domain->title)->toBe('title');
-    expect($domain->description)->toBe('description');
-    expect($domain->yearLaunched)->toBe(2010);
-    expect($domain->duration)->toBe(50);
-    expect($domain->opened)->toBeTrue();
-    expect($domain->rating->value)->toBe('L');
-    expect($domain->publish)->toBeFalse();
     expect($domain->createdAt())->not->toBeEmpty();
 });
 
