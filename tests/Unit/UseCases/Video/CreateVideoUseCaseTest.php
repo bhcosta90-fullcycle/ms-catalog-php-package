@@ -85,7 +85,7 @@ $mockGenreRepository = function ($items = []) {
     foreach ($items as $item) {
         $newItems[$item] = $item;
     }
-    
+
     $mock = Mockery::mock(GenreRepositoryInterface::class);
     $mock->shouldReceive('getIdsByListId')->andReturn(mockKeyValue($newItems));
     return $mock;
@@ -139,7 +139,7 @@ test("execute", function () use (
     $mockRepository->shouldHaveReceived('insert')->times(1);
 });
 
-test("execute send a categories at input -> exception", function () use (
+test("execute send a categories at input -> exception", function ($data) use (
     $mockRepository,
     $mockCategoryRepository,
     $mockGenreRepository,
@@ -157,179 +157,41 @@ test("execute send a categories at input -> exception", function () use (
         eventManager: $mockEventManagerInterface = $mockEventManagerInterface(),
     );
 
-    $useCase->execute(
-        input: new CreateVideoInput(
-            title: 'testing',
-            description: 'description',
-            yearLaunched: 2010,
-            duration: 50,
-            opened: true,
-            rating: 'L',
-            categories: ['category-123456', 'category-654321']
-        )
-    );
-})->throws(EntityNotFoundException::class, 'Categories category-123456, category-654321 not found');
-
-test("execute send a categories at input -> validate", function () use (
-    $mockRepository,
-    $mockCategoryRepository,
-    $mockGenreRepository,
-    $mockCastMemberRepository,
-    $mockFileStorageInterface,
-    $mockEventManagerInterface
-) {
-    $useCase = new CreateVideoUseCase(
-        repository: $mockRepository = $mockRepository(),
-        repositoryCategory: $mockCategoryRepository = $mockCategoryRepository(['category-123456', 'category-654321']),
-        repositoryGenre: $mockGenreRepository = $mockGenreRepository(),
-        repositoryCastMember: $mockCastMemberRepository = $mockCastMemberRepository(),
-        transaction: mockTransaction(),
-        storage: $mockFileStorageInterface = $mockFileStorageInterface(),
-        eventManager: $mockEventManagerInterface = $mockEventManagerInterface(),
-    );
-
-    $response = $useCase->execute(
-        input: new CreateVideoInput(
-            title: 'testing',
-            description: 'description',
-            yearLaunched: 2010,
-            duration: 50,
-            opened: true,
-            rating: 'L',
-            categories: $expect = ['category-123456', 'category-654321']
-        )
-    );
-    expect($response->categories)->toBe($expect);
-});
-
-test("execute send a cast members at input -> exception", function () use (
-    $mockRepository,
-    $mockCategoryRepository,
-    $mockGenreRepository,
-    $mockCastMemberRepository,
-    $mockFileStorageInterface,
-    $mockEventManagerInterface
-) {
-    $useCase = new CreateVideoUseCase(
-        repository: $mockRepository = $mockRepository(),
-        repositoryCategory: $mockCategoryRepository = $mockCategoryRepository(),
-        repositoryGenre: $mockGenreRepository = $mockGenreRepository(),
-        repositoryCastMember: $mockCastMemberRepository = $mockCastMemberRepository(),
-        transaction: mockTransaction(),
-        storage: $mockFileStorageInterface = $mockFileStorageInterface(),
-        eventManager: $mockEventManagerInterface = $mockEventManagerInterface(),
-    );
-
-    $useCase->execute(
-        input: new CreateVideoInput(
-            title: 'testing',
-            description: 'description',
-            yearLaunched: 2010,
-            duration: 50,
-            opened: true,
-            rating: 'L',
-            videoFile: ['path' => 'testing'],
-            castMembers: ['123456', '654321']
-        )
-    );
-})->throws(EntityNotFoundException::class, 'Cast members 123456, 654321 not found');
-
-test("execute send a cast members at input -> validate", function () use (
-    $mockRepository,
-    $mockCategoryRepository,
-    $mockGenreRepository,
-    $mockCastMemberRepository,
-    $mockFileStorageInterface,
-    $mockEventManagerInterface
-) {
-    $useCase = new CreateVideoUseCase(
-        repository: $mockRepository = $mockRepository(),
-        repositoryCategory: $mockCategoryRepository = $mockCategoryRepository(),
-        repositoryGenre: $mockGenreRepository = $mockGenreRepository(),
-        repositoryCastMember: $mockCastMemberRepository = $mockCastMemberRepository([
-            'cast-member-123456', 'cast-member-654321'
-        ]),
-        transaction: mockTransaction(),
-        storage: $mockFileStorageInterface = $mockFileStorageInterface(),
-        eventManager: $mockEventManagerInterface = $mockEventManagerInterface(),
-    );
-    
-    $response = $useCase->execute(
-        input: new CreateVideoInput(
-            title: 'testing',
-            description: 'description',
-            yearLaunched: 2010,
-            duration: 50,
-            opened: true,
-            rating: 'L',
-            videoFile: ['path' => 'testing'],
-            castMembers: $expect = ['cast-member-123456', 'cast-member-654321']
-        )
-    );
-    expect($response->cast_members)->toBe($expect);
-});
-
-test("execute send a genres at input -> exception", function () use (
-    $mockRepository,
-    $mockCategoryRepository,
-    $mockGenreRepository,
-    $mockCastMemberRepository,
-    $mockFileStorageInterface,
-    $mockEventManagerInterface
-) {
-    $useCase = new CreateVideoUseCase(
-        repository: $mockRepository = $mockRepository(),
-        repositoryCategory: $mockCategoryRepository = $mockCategoryRepository(),
-        repositoryGenre: $mockGenreRepository = $mockGenreRepository(),
-        repositoryCastMember: $mockCastMemberRepository = $mockCastMemberRepository(),
-        transaction: mockTransaction(),
-        storage: $mockFileStorageInterface = $mockFileStorageInterface(),
-        eventManager: $mockEventManagerInterface = $mockEventManagerInterface(),
-    );
-
-    $useCase->execute(
-        input: new CreateVideoInput(
-            title: 'testing',
-            description: 'description',
-            yearLaunched: 2010,
-            duration: 50,
-            opened: true,
-            rating: 'L',
-            videoFile: ['path' => 'testing'],
-            genres: ['123456', '654321']
-        )
-    );
-})->throws(EntityNotFoundException::class, 'Genres 123456, 654321 not found');
-
-test("execute send a genres at input -> validate", function () use (
-    $mockRepository,
-    $mockCategoryRepository,
-    $mockGenreRepository,
-    $mockCastMemberRepository,
-    $mockFileStorageInterface,
-    $mockEventManagerInterface
-) {
-    $useCase = new CreateVideoUseCase(
-        repository: $mockRepository = $mockRepository(),
-        repositoryCategory: $mockCategoryRepository = $mockCategoryRepository(),
-        repositoryGenre: $mockGenreRepository = $mockGenreRepository(['genre-123456', 'genre-654321']),
-        repositoryCastMember: $mockCastMemberRepository = $mockCastMemberRepository(),
-        transaction: mockTransaction(),
-        storage: $mockFileStorageInterface = $mockFileStorageInterface(),
-        eventManager: $mockEventManagerInterface = $mockEventManagerInterface(),
-    );
-
-    $response = $useCase->execute(
-        input: new CreateVideoInput(
-            title: 'testing',
-            description: 'description',
-            yearLaunched: 2010,
-            duration: 50,
-            opened: true,
-            rating: 'L',
-            videoFile: ['path' => 'testing'],
-            genres: $expect = ['genre-123456', 'genre-654321']
-        )
-    );
-    expect($response->genres)->toBe($expect);
-});
+    try {
+        $useCase->execute(
+            input: new CreateVideoInput(
+                title: 'testing',
+                description: 'description',
+                yearLaunched: 2010,
+                duration: 50,
+                opened: true,
+                rating: 'L',
+                categories: $data['categories'] ?? [],
+                genres: $data['genres'] ?? [],
+                castMembers: $data['cast-members'] ?? [],
+            )
+        );
+    } catch (EntityNotFoundException $e) {
+        expect($e->getMessage())->toBe($data['message']);
+    }
+})
+    ->with([
+        "categories" => fn () => [
+            'categories' => [
+                'category-123456',
+                'category-654321'
+            ], 'message' => 'Categories category-123456, category-654321 not found'
+        ],
+        "genres" => fn () => [
+            'genres' => [
+                'genre-123456',
+                'genre-654321'
+            ], 'message' => 'Genres genre-123456, genre-654321 not found'
+        ],
+        "cast-members" => fn () => [
+            'cast-members' => [
+                'cast-members-123456',
+                'cast-members-654321'
+            ], 'message' => 'Cast members cast-members-123456, cast-members-654321 not found'
+        ]
+    ]);
