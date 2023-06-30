@@ -25,6 +25,7 @@ beforeEach(function () {
     $entity->shouldReceive('id')->andReturn($this->id);
     $entity->shouldReceive('createdAt');
     $entity->shouldReceive('update');
+    $entity->shouldReceive('enable');
     $entity->shouldReceive('addCategory');
     $this->entity = $entity;
 

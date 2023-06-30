@@ -27,6 +27,12 @@ class UpdateGenreUseCase
             $domain = $this->repository->getById($input->id);
             $domain->update(name: $input->name);
 
+            if ($input->isActive) {
+                $domain->enable();
+            } else {
+                $domain->disable();
+            }
+
             foreach ($input->categories as $categoryId) {
                 $domain->addCategory($categoryId);
             }
