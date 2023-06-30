@@ -24,7 +24,7 @@ class UpdateGenreUseCase
     public function execute(DTO\UpdateGenre\Input $input): DTO\GenreOutput
     {
         try {
-            $domain = $this->repository->getById($input->name);
+            $domain = $this->repository->getById($input->id);
             $domain->update(name: $input->name);
 
             foreach ($input->categories as $categoryId) {
