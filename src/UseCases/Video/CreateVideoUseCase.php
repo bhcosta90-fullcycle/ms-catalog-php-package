@@ -42,6 +42,10 @@ class CreateVideoUseCase
             $this->repository->insert($this->entity);
             $this->transaction->commit();
 
+            if (!empty($files['video-file']) || !empty($files['banner-file'])) {
+                $this->eventManager->dispatch(new VideoCreateEvent($this->entity));
+            }
+
             return $this->output();
         } catch (Throwable $e) {
             $this->transaction->rollback();
@@ -84,28 +88,28 @@ class CreateVideoUseCase
         if ($path = $this->storeFile($this->entity->id(), $input->videoFile)) {
             $media = new Media(path: $path, status: MediaStatus::PENDING);
             $this->entity->setVideoFile($media);
-            $response[] = $path;
+            $response['video-file'] = $path;
         }
 
         if ($path = $this->storeFile($this->entity->id(), $input->trailerFile)) {
             $media = new Media(path: $path, status: MediaStatus::PENDING);
             $this->entity->setTrailerFile($media);
-            $response[] = $path;
+            $response['trailer-file'] = $path;
         }
 
         if ($path = $this->storeFile($this->entity->id(), $input->bannerFile)) {
             $this->entity->setBannerFile(new Image(image: $path));
-            $response[] = $path;
+            $response['banner-file'] = $path;
         }
 
         if ($path = $this->storeFile($this->entity->id(), $input->thumbFile)) {
             $this->entity->setThumbFile(new Image(image: $path));
-            $response[] = $path;
+            $response['thumb-file'] = $path;
         }
 
         if ($path = $this->storeFile($this->entity->id(), $input->thumbHalf)) {
             $this->entity->setThumbHalf(new Image(image: $path));
-            $response[] = $path;
+            $response['thumb-half'] = $path;
         }
 
         return $response;
