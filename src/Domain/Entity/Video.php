@@ -8,6 +8,7 @@ use BRCas\CA\Domain\Traits\MethodMagicsTrait;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Enum\Rating;
 use BRCas\MV\Domain\ValueObject\Image;
+use BRCas\MV\Domain\ValueObject\Media;
 use DateTime;
 
 class Video
@@ -23,6 +24,9 @@ class Video
         protected Rating $rating,
         protected ?Image $thumbFile = null,
         protected ?Image $thumbHalf = null,
+        protected ?Image $bannerFile = null,
+        protected ?Media $trailerFile = null,
+        protected ?Media $videoFile = null,
         protected array $categories = [],
         protected array $genres = [],
         protected array $castMembers = [],
@@ -81,5 +85,20 @@ class Video
     public function thumbHalf(): ?Image
     {
         return $this->thumbHalf;
+    }
+
+    public function bannerFile(): ?Image
+    {
+        return $this->bannerFile;
+    }
+
+    public function trailerFile(): ?Media
+    {
+        return $this->trailerFile;
+    }
+
+    public function videoFile(): ?Media
+    {
+        return $this->videoFile;
     }
 }

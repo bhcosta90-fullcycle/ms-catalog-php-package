@@ -1,9 +1,9 @@
 <?php
 
 use BRCas\CA\Domain\ValueObject\Uuid;
-use BRCas\MV\Domain\ValueObject\Image;
+use BRCas\MV\Domain\ValueObject\{Image, Media};
 use BRCas\MV\Domain\Entity\Video;
-use BRCas\MV\Domain\Enum\Rating;
+use BRCas\MV\Domain\Enum\{MediaStatus, Rating};
 use Ramsey\Uuid\Uuid as UuidUuid;
 
 test('attributes', function () {
@@ -27,8 +27,19 @@ test('attributes', function () {
     expect($domain->opened)->toBeTrue();
     expect($domain->rating->value)->toBe('L');
     expect($domain->publish)->toBeTrue();
+    
     expect($domain->thumbFile()?->path())->toBeNull();
     expect($domain->thumbHalf()?->path())->toBeNull();
+    expect($domain->bannerFile()?->path())->toBeNull();
+
+    expect($domain->trailerFile()?->path)->toBeNull();
+    expect($domain->trailerFile()?->status)->toBeNull();
+    expect($domain->trailerFile()?->encoded)->toBeNull();
+
+    expect($domain->videoFile()?->path)->toBeNull();
+    expect($domain->videoFile()?->status)->toBeNull();
+    expect($domain->videoFile()?->encoded)->toBeNull();
+
     expect($domain->createdAt())->toBe($dateTime->format('Y-m-d H:i:s'));
 });
 
@@ -148,7 +159,7 @@ test('remove cast member at video', function () {
     expect($domain->castMembers)->toHaveCount(1);
 });
 
-test("value object image", function(){
+test("value object image", function () {
     $domain = new Video(
         title: 'title',
         description: 'description',
@@ -156,10 +167,40 @@ test("value object image", function(){
         duration: 50,
         opened: true,
         rating: Rating::L,
-        thumbFile: new Image('testing/testing-thumb.php'),
-        thumbHalf: new Image('testing/testing-half.php'),
+        thumbFile: new Image('testing/testing-thumb.jpg'),
+        thumbHalf: new Image('testing/testing-half.jpg'),
+        bannerFile: new Image('testing/banner-file.jpg'),
     );
 
-    expect($domain->thumbFile()->path())->toBe('testing/testing-thumb.php');
-    expect($domain->thumbHalf()->path())->toBe('testing/testing-half.php');
+    expect($domain->thumbFile()->path())->toBe('testing/testing-thumb.jpg');
+    expect($domain->thumbHalf()->path())->toBe('testing/testing-half.jpg');
+    expect($domain->bannerFile()->path())->toBe('testing/banner-file.jpg');
+});
+
+test("value object media", function () {
+    $domain = new Video(
+        title: 'title',
+        description: 'description',
+        yearLaunched: 2010,
+        duration: 50,
+        opened: true,
+        rating: Rating::L,
+        trailerFile: new Media(
+            path: 'testing/trailer-file.mp4',
+            status: MediaStatus::PENDING,
+            encoded: 'testing/trailer-file.extension'
+        ),
+        videoFile: new Media(
+            path: 'testing/trailer-file.mp4',
+            status: MediaStatus::PENDING,
+        ),
+    );
+
+    expect($domain->trailerFile()->path)->toBe('testing/trailer-file.mp4');
+    expect($domain->trailerFile()->status->value)->toBe(2);
+    expect($domain->trailerFile()->encoded)->toBe('testing/trailer-file.extension');
+
+    expect($domain->videoFile()->path)->toBe('testing/trailer-file.mp4');
+    expect($domain->videoFile()->status->value)->toBe(2);
+    expect($domain->videoFile()->encoded)->toBeNull();
 });
