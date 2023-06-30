@@ -18,6 +18,11 @@ class ValidationNotification
         $this->errors[] = ['context' => $context, 'message' => $message];
     }
 
+    public function hasError(): bool
+    {
+        return (bool) count($this->errors);
+    }
+
     public function messages(string $context = null): string
     {
         $message = '';

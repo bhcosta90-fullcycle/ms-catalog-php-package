@@ -14,6 +14,13 @@ test('add errors', function () {
     expect($notification->getErrors())->toHaveCount(1);
 });
 
+test('has erros', function () {
+    $notification = new ValidationNotification();
+    expect($notification->hasError())->toBeFalse();
+    $notification->addError('video', 'video is required');
+    expect($notification->hasError())->toBeTrue();
+});
+
 test('messages', function () {
     $notification = new ValidationNotification();
     $notification->addError('video', 'video is required 01');

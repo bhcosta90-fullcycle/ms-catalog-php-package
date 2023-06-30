@@ -1,6 +1,6 @@
 <?php
 
-use BRCas\CA\Domain\Exceptions\EntityValidationException;
+use BRCas\CA\Domain\Exceptions\ValidationNotificationException;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\ValueObject\{Image, Media};
 use BRCas\MV\Domain\Entity\Video;
@@ -215,4 +215,4 @@ test("validation", function () {
         opened: true,
         rating: Rating::L,
     );
-})->throws(EntityValidationException::class);
+})->throws(ValidationNotificationException::class);

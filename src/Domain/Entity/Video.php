@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace BRCas\MV\Domain\Entity;
 
+use BRCas\CA\Domain\Exceptions\ValidationNotificationException;
+use BRCas\CA\Domain\Notification\ValidationNotification;
 use BRCas\CA\Domain\Traits\MethodMagicsTrait;
-use BRCas\CA\Domain\Validation\DomainValidation;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Enum\Rating;
 use BRCas\MV\Domain\ValueObject\Image;
@@ -107,12 +108,21 @@ class Video
 
     protected function validation()
     {
-        DomainValidation::make($this->title)
-            ->strMinLength()
-            ->strMaxLength();
+        $notification = new ValidationNotification();
+        if (empty($this->title)) {
+            $notification->addError('video', 'Should not be empty or null');
+        }
 
-        DomainValidation::make($this->description)
-            ->strCanNullMinLength()
-            ->strCanNullMaxLength();
+        if ($this->title && strlen($this->title) < 3) {
+            $notification->addError('video', 'invalid quantity');
+        }
+
+        if ($this->description && strlen($this->description) < 3) {
+            $notification->addError('video', 'invalid quantity');
+        }
+
+        if ($notification->hasError()) {
+            throw new ValidationNotificationException($notification->messages());
+        }
     }
 }
