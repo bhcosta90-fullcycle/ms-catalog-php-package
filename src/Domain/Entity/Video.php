@@ -7,6 +7,7 @@ namespace BRCas\MV\Domain\Entity;
 use BRCas\CA\Domain\Traits\MethodMagicsTrait;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Enum\Rating;
+use BRCas\MV\Domain\ValueObject\Image;
 use DateTime;
 
 class Video
@@ -20,6 +21,8 @@ class Video
         protected int $duration,
         protected bool $opened,
         protected Rating $rating,
+        protected ?Image $thumbFile = null,
+        protected ?Image $thumbHalf = null,
         protected array $categories = [],
         protected array $genres = [],
         protected array $castMembers = [],
@@ -68,5 +71,15 @@ class Video
             unset($this->castMembers[array_search($castMember, $this->castMembers)]);
             $this->castMembers = array_values($this->castMembers);
         }
+    }
+
+    public function thumbFile(): ?Image
+    {
+        return $this->thumbFile;
+    }
+
+    public function thumbHalf(): ?Image
+    {
+        return $this->thumbHalf;
     }
 }

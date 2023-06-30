@@ -1,6 +1,7 @@
 <?php
 
 use BRCas\CA\Domain\ValueObject\Uuid;
+use BRCas\MV\Domain\ValueObject\Image;
 use BRCas\MV\Domain\Entity\Video;
 use BRCas\MV\Domain\Enum\Rating;
 use Ramsey\Uuid\Uuid as UuidUuid;
@@ -26,6 +27,8 @@ test('attributes', function () {
     expect($domain->opened)->toBeTrue();
     expect($domain->rating->value)->toBe('L');
     expect($domain->publish)->toBeTrue();
+    expect($domain->thumbFile()?->path())->toBeNull();
+    expect($domain->thumbHalf()?->path())->toBeNull();
     expect($domain->createdAt())->toBe($dateTime->format('Y-m-d H:i:s'));
 });
 
@@ -143,4 +146,20 @@ test('remove cast member at video', function () {
 
     $domain->removeCastMember('456');
     expect($domain->castMembers)->toHaveCount(1);
+});
+
+test("value object image", function(){
+    $domain = new Video(
+        title: 'title',
+        description: 'description',
+        yearLaunched: 2010,
+        duration: 50,
+        opened: true,
+        rating: Rating::L,
+        thumbFile: new Image('testing/testing-thumb.php'),
+        thumbHalf: new Image('testing/testing-half.php'),
+    );
+
+    expect($domain->thumbFile()->path())->toBe('testing/testing-thumb.php');
+    expect($domain->thumbHalf()->path())->toBe('testing/testing-half.php');
 });
