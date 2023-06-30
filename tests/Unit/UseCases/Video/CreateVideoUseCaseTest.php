@@ -119,7 +119,6 @@ test("execute", function () use ($useCase) {
             duration: 50,
             opened: true,
             rating: 'L',
-            videoFile: ['path' => 'testing']
         )
     );
 
