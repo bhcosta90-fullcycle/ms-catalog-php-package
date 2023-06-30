@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BRCas\MV\Domain\Entity;
 
 use BRCas\CA\Domain\Traits\MethodMagicsTrait;
+use BRCas\CA\Domain\Validation\DomainValidation;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Enum\Rating;
 use BRCas\MV\Domain\ValueObject\Image;
@@ -36,6 +37,8 @@ class Video
     ) {
         $this->id = $this->id ?: Uuid::make();
         $this->createdAt = $this->createdAt ?: new DateTime();
+
+        $this->validation();
     }
 
     public function addCategory(string $category)
@@ -100,5 +103,16 @@ class Video
     public function videoFile(): ?Media
     {
         return $this->videoFile;
+    }
+
+    protected function validation()
+    {
+        DomainValidation::make($this->title)
+            ->strMinLength()
+            ->strMaxLength();
+
+        DomainValidation::make($this->description)
+            ->strCanNullMinLength()
+            ->strCanNullMaxLength();
     }
 }

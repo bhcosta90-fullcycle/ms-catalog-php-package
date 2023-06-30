@@ -1,5 +1,6 @@
 <?php
 
+use BRCas\CA\Domain\Exceptions\EntityValidationException;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\ValueObject\{Image, Media};
 use BRCas\MV\Domain\Entity\Video;
@@ -27,7 +28,7 @@ test('attributes', function () {
     expect($domain->opened)->toBeTrue();
     expect($domain->rating->value)->toBe('L');
     expect($domain->publish)->toBeTrue();
-    
+
     expect($domain->thumbFile()?->path())->toBeNull();
     expect($domain->thumbHalf()?->path())->toBeNull();
     expect($domain->bannerFile()?->path())->toBeNull();
@@ -204,3 +205,14 @@ test("value object media", function () {
     expect($domain->videoFile()->status->value)->toBe(2);
     expect($domain->videoFile()->encoded)->toBeNull();
 });
+
+test("validation", function () {
+    new Video(
+        title: 'ti',
+        description: 'de',
+        yearLaunched: 2010,
+        duration: 50,
+        opened: true,
+        rating: Rating::L,
+    );
+})->throws(EntityValidationException::class);
