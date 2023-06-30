@@ -19,7 +19,7 @@
         "ramsey/uuid": "^4.7"
     },
     "scripts": {
-        "tests": [
+        "test": [
             "./vendor/bin/pest --parallel",
             "./vendor/bin/infection --test-framework=pest"
         ]
