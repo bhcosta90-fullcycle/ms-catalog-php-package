@@ -4,17 +4,17 @@ namespace BRCas\MV\UseCases\Video;
 
 use BRCas\CA\Domain\Exceptions\EntityNotFoundException;
 use BRCas\CA\UseCase\{DatabaseTransactionInterface, FileStorageInterface};
+use BRCas\MV\Domain\Builder\Video\CreateBuilderVideo;
 use BRCas\MV\Domain\Repository\{
     CastMemberRepositoryInterface,
     CategoryRepositoryInterface,
     GenreRepositoryInterface,
     VideoRepositoryInterface
 };
-use BRCas\MV\UseCases\Video\Builder\BuilderVideo;
 
 abstract class BaseVideoUseCase
 {
-    protected BuilderVideo $builder;
+    protected CreateBuilderVideo $builder;
 
     public function __construct(
         protected VideoRepositoryInterface $repository,
@@ -25,7 +25,7 @@ abstract class BaseVideoUseCase
         protected FileStorageInterface $storage,
         protected Interfaces\VideoEventManagerInterface $eventManager,
     ) {
-        $this->builder = new BuilderVideo();
+        $this->builder = new CreateBuilderVideo();
     }
 
     protected function store($input): array

@@ -1,14 +1,13 @@
 <?php
 
-namespace BRCas\MV\UseCases\Video\Builder;
+namespace BRCas\MV\Domain\Builder\Video;
 
 use BRCas\MV\Domain\Entity\Video;
 use BRCas\MV\Domain\Enum\MediaStatus;
 use BRCas\MV\Domain\Enum\Rating;
 use BRCas\MV\Domain\ValueObject\Image;
-use BRCas\MV\UseCases\Video\Interfaces\BuilderVideoInterface;
 
-class BuilderVideo implements BuilderVideoInterface
+class CreateBuilderVideo implements BuilderVideoInterface
 {
     protected ?Video $entity = null;
 
@@ -28,6 +27,12 @@ class BuilderVideo implements BuilderVideoInterface
             rating: Rating::from($input->rating)
         );
 
+        $this->addIds($input);
+
+        return $this->entity;
+    }
+
+    protected function addIds(object $input) {
         foreach ($input->categories as $category) {
             $this->entity->addCategory($category);
         }
@@ -39,8 +44,6 @@ class BuilderVideo implements BuilderVideoInterface
         foreach ($input->castMembers as $castMember) {
             $this->entity->addCastMember($castMember);
         }
-
-        return $this->entity;
     }
 
     public function addMediaVideo($path, MediaStatus $status): self

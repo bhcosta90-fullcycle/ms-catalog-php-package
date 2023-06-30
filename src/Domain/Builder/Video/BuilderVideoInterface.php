@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\MV\UseCases\Video\Interfaces;
+namespace BRCas\MV\Domain\Builder\Video;
 
 use BRCas\MV\Domain\Entity\Video;
 use BRCas\MV\Domain\Enum\MediaStatus;
