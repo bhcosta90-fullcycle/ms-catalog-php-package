@@ -176,11 +176,21 @@ test("execute send a categories at input -> exception", function ($data) use (
     }
 })
     ->with([
+        "category" => fn () => [
+            'categories' => [
+                'category-123456',
+            ], 'message' => 'Category category-123456 not found'
+        ],
         "categories" => fn () => [
             'categories' => [
                 'category-123456',
                 'category-654321'
             ], 'message' => 'Categories category-123456, category-654321 not found'
+        ],
+        "genre" => fn () => [
+            'genres' => [
+                'genre-123456',
+            ], 'message' => 'Genre genre-123456 not found'
         ],
         "genres" => fn () => [
             'genres' => [
@@ -188,10 +198,15 @@ test("execute send a categories at input -> exception", function ($data) use (
                 'genre-654321'
             ], 'message' => 'Genres genre-123456, genre-654321 not found'
         ],
-        "cast-members" => fn () => [
+        "cast member" => fn () => [
+            'cast-members' => [
+                'cast-members-123456',
+            ], 'message' => 'Cast member cast-members-123456 not found'
+        ],
+        "cast members" => fn () => [
             'cast-members' => [
                 'cast-members-123456',
                 'cast-members-654321'
             ], 'message' => 'Cast members cast-members-123456, cast-members-654321 not found'
-        ]
+        ],
     ]);
