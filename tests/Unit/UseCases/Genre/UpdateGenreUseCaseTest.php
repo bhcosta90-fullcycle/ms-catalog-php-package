@@ -26,6 +26,7 @@ beforeEach(function () {
     $entity->shouldReceive('createdAt');
     $entity->shouldReceive('update');
     $entity->shouldReceive('enable');
+    $entity->shouldReceive('disable');
     $entity->shouldReceive('addCategory');
     $this->entity = $entity;
 
@@ -42,7 +43,7 @@ beforeEach(function () {
     );
 });
 
-test("create a new domain", function () {
+test("update a domain -> enable", function () {
     $response = $this->useCase->execute(new Input(
         id: $this->id,
         name: $this->data[0],
@@ -58,9 +59,32 @@ test("create a new domain", function () {
     $this->repository->shouldHaveReceived('update')->times(1);
     $this->entity->shouldHaveReceived('addCategory')->times(2);
     $this->entity->shouldHaveReceived('update')->times(1);
+    $this->entity->shouldNotHaveReceived('disable');
+    $this->entity->shouldHaveReceived('enable')->times(1);
 });
 
-test("create a new domain with exception category", function () {
+test("update a domain -> disabled", function () {
+    $response = $this->useCase->execute(new Input(
+        id: $this->id,
+        name: $this->data[0],
+        categories: array_keys($this->categories),
+        isActive: false,
+    ));
+
+    expect($response)->toBeInstanceOf(Output::class);
+    expect($response->id)->toBe((string) $this->id);
+    expect($response->name)->toBe($this->data[0]);
+    expect($response->is_active)->toBeTrue();
+    expect($response->categories)->toBe(['abc', 'def']);
+    $this->repository->shouldHaveReceived('getById')->times(1);
+    $this->repository->shouldHaveReceived('update')->times(1);
+    $this->entity->shouldHaveReceived('addCategory')->times(2);
+    $this->entity->shouldHaveReceived('update')->times(1);
+    $this->entity->shouldNotHaveReceived('enable');
+    $this->entity->shouldHaveReceived('disable')->times(1);
+});
+
+test("update a domain with exception category", function () {
     $this->useCase->execute(new Input(
         id: $this->id,
         name: $this->data[0],
@@ -68,7 +92,7 @@ test("create a new domain with exception category", function () {
     ));
 })->throws(EntityNotFoundException::class);
 
-test("create a new domain with exception two categories", function () {
+test("update a domain with exception two categories", function () {
     $this->useCase->execute(new Input(
         id: $this->id,
         name: $this->data[0],
