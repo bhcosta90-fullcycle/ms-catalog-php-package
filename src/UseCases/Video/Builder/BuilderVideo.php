@@ -4,6 +4,7 @@ namespace BRCas\MV\UseCases\Video\Builder;
 
 use BRCas\MV\Domain\Entity\Video;
 use BRCas\MV\Domain\Enum\MediaStatus;
+use BRCas\MV\Domain\Enum\Rating;
 use BRCas\MV\UseCases\Video\Interfaces\BuilderVideoInterface;
 
 class BuilderVideo implements BuilderVideoInterface
@@ -25,6 +26,18 @@ class BuilderVideo implements BuilderVideoInterface
             opened: $input->opened,
             rating: Rating::from($input->rating)
         );
+
+        foreach ($input->categories as $category) {
+            $this->entity->addCategory($category);
+        }
+
+        foreach ($input->genres as $genres) {
+            $this->entity->addGenre($genres);
+        }
+
+        foreach ($input->castMembers as $castMember) {
+            $this->entity->addCastMember($castMember);
+        }
 
         return $this->entity;
     }

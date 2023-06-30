@@ -15,11 +15,12 @@ use BRCas\MV\Domain\Repository\GenreRepositoryInterface;
 use BRCas\MV\Domain\Repository\VideoRepositoryInterface;
 use BRCas\MV\Domain\ValueObject\Image;
 use BRCas\MV\Domain\ValueObject\Media;
+use BRCas\MV\UseCases\Video\Builder\BuilderVideo;
 use Throwable;
 
 class CreateVideoUseCase
 {
-    protected Video $entity;
+    protected BuilderVideo $builder;
     
     public function __construct(
         protected VideoRepositoryInterface $repository,
@@ -30,16 +31,17 @@ class CreateVideoUseCase
         protected FileStorageInterface $storage,
         protected Interfaces\VideoEventManagerInterface $eventManager,
     ) {
-        //
+        $this->builder = new BuilderVideo();
     }
 
     public function execute(DTO\CreateVideoInput $input): DTO\VideoOutput
     {
         try {
-            $this->createEntity($input);
+            $this->validateAllIds($input);
+            $this->builder->createEntity($input);
             $files = $this->store($input);
-
-            $this->repository->insert($this->entity);
+            
+            $this->repository->insert($this->builder->getEntity());
             $this->transaction->commit();
 
             if (!empty($files['video-file']) || !empty($files['banner-file'])) {
@@ -53,62 +55,33 @@ class CreateVideoUseCase
         }
     }
 
-    protected function createEntity(DTO\CreateVideoInput $input): Video
-    {
-        $this->entity = new Video(
-            title: $input->title,
-            description: $input->description,
-            yearLaunched: $input->yearLaunched,
-            duration: $input->duration,
-            opened: $input->opened,
-            rating: Rating::from($input->rating)
-        );
-
-        $this->validateAllIds($input);
-
-        foreach ($input->categories as $category) {
-            $this->entity->addCategory($category);
-        }
-
-        foreach ($input->genres as $genres) {
-            $this->entity->addGenre($genres);
-        }
-
-        foreach ($input->castMembers as $castMember) {
-            $this->entity->addCastMember($castMember);
-        }
-
-        return $this->entity;
-    }
-
     protected function store($input): array
     {
+        $pathFile = $this->builder->getEntity()->id();
         $response = [];
 
-        if ($path = $this->storeFile($this->entity->id(), $input->videoFile)) {
-            $media = new Media(path: $path, status: MediaStatus::PENDING);
-            $this->entity->setVideoFile($media);
+        if ($path = $this->storeFile($pathFile, $input->videoFile)) {
+            $this->builder->addMediaVideo($path, MediaStatus::PROCESSING);
             $response['video-file'] = $path;
         }
 
-        if ($path = $this->storeFile($this->entity->id(), $input->trailerFile)) {
-            $media = new Media(path: $path, status: MediaStatus::PENDING);
-            $this->entity->setTrailerFile($media);
+        if ($path = $this->storeFile($pathFile, $input->trailerFile)) {
+            $this->builder->addMediaTrailer($path, MediaStatus::PROCESSING);
             $response['trailer-file'] = $path;
         }
 
-        if ($path = $this->storeFile($this->entity->id(), $input->bannerFile)) {
-            $this->entity->setBannerFile(new Image(image: $path));
+        if ($path = $this->storeFile($pathFile, $input->bannerFile)) {
+            $this->builder->addImageBanner($path);
             $response['banner-file'] = $path;
         }
 
-        if ($path = $this->storeFile($this->entity->id(), $input->thumbFile)) {
-            $this->entity->setThumbFile(new Image(image: $path));
+        if ($path = $this->storeFile($pathFile, $input->thumbFile)) {
+            $this->builder->addImageThumb($path);
             $response['thumb-file'] = $path;
         }
 
-        if ($path = $this->storeFile($this->entity->id(), $input->thumbHalf)) {
-            $this->entity->setThumbHalf(new Image(image: $path));
+        if ($path = $this->storeFile($pathFile, $input->thumbHalf)) {
+            $this->builder->addImageThumbHalf($path);
             $response['thumb-half'] = $path;
         }
 
@@ -127,22 +100,22 @@ class CreateVideoUseCase
     protected function output(): DTO\VideoOutput
     {
         return new DTO\VideoOutput(
-            id: $this->entity->id(),
-            title: $this->entity->title,
-            description: $this->entity->description,
-            yearLaunched: $this->entity->yearLaunched,
-            duration: $this->entity->duration,
-            opened: $this->entity->opened,
-            rating: $this->entity->rating->value,
-            categories: $this->entity->categories,
-            genres: $this->entity->genres,
-            cast_members: $this->entity->castMembers,
-            thumb_file: $this->entity->thumbFile()?->path(),
-            thumb_half: $this->entity->thumbHalf()?->path(),
-            banner_file: $this->entity->bannerFile()?->path(),
-            trailer_file: $this->entity->trailerFile()?->path,
-            video_file: $this->entity->trailerFile()?->path,
-            created_at: $this->entity->createdAt(),
+            id: $this->builder->getEntity()->id(),
+            title: $this->builder->getEntity()->title,
+            description: $this->builder->getEntity()->description,
+            yearLaunched: $this->builder->getEntity()->yearLaunched,
+            duration: $this->builder->getEntity()->duration,
+            opened: $this->builder->getEntity()->opened,
+            rating: $this->builder->getEntity()->rating->value,
+            categories: $this->builder->getEntity()->categories,
+            genres: $this->builder->getEntity()->genres,
+            cast_members: $this->builder->getEntity()->castMembers,
+            thumb_file: $this->builder->getEntity()->thumbFile()?->path(),
+            thumb_half: $this->builder->getEntity()->thumbHalf()?->path(),
+            banner_file: $this->builder->getEntity()->bannerFile()?->path(),
+            trailer_file: $this->builder->getEntity()->trailerFile()?->path,
+            video_file: $this->builder->getEntity()->trailerFile()?->path,
+            created_at: $this->builder->getEntity()->createdAt(),
         );
     }
 
