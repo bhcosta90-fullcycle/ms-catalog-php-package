@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace BRCas\MV\Domain\Entity;
 
+use BRCas\CA\Domain\Abstracts\EntityAbstract;
 use BRCas\CA\Domain\Traits\MethodMagicsTrait;
 use BRCas\CA\Domain\Validation\DomainValidation;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Enum\CastMemberType;
 use DateTime;
 
-class CastMember
+class CastMember extends EntityAbstract
 {
     use MethodMagicsTrait;
 
@@ -21,6 +22,8 @@ class CastMember
         protected ?Uuid $id = null,
         protected ?DateTime $createdAt = null,
     ) {
+        parent::__construct();
+        
         $this->id = $this->id ?: Uuid::make();
         $this->createdAt = $this->createdAt ?: new DateTime();
 

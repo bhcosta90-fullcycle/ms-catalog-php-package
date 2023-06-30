@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace BRCas\MV\Domain\Entity;
 
+use BRCas\CA\Domain\Abstracts\EntityAbstract;
 use BRCas\CA\Domain\Traits\MethodMagicsTrait;
 use BRCas\CA\Domain\Validation\DomainValidation;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use DateTime;
 
-class Category
+class Category extends EntityAbstract
 {
     use MethodMagicsTrait;
 
@@ -20,6 +21,8 @@ class Category
         protected Uuid|string $id = '',
         protected DateTime|string $createdAt = '',
     ) {
+        parent::__construct();
+        
         $this->id = $this->id
             ? new Uuid($this->id)
             : Uuid::make();

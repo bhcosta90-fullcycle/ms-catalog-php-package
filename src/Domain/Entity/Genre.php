@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace BRCas\MV\Domain\Entity;
 
+use BRCas\CA\Domain\Abstracts\EntityAbstract;
 use BRCas\CA\Domain\Traits\MethodMagicsTrait;
 use BRCas\CA\Domain\Validation\DomainValidation;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use DateTime;
 
-class Genre
+class Genre extends EntityAbstract
 {
     use MethodMagicsTrait;
 
@@ -20,6 +21,8 @@ class Genre
         protected ?Uuid $id = null,
         protected ?DateTime $createdAt = null,
     ) {
+        parent::__construct();
+
         $this->id = $this->id ?: Uuid::make();
         $this->createdAt = $this->createdAt ?: new DateTime();
 
@@ -42,7 +45,8 @@ class Genre
         $this->validate();
     }
 
-    public function addCategory(string $category){
+    public function addCategory(string $category)
+    {
         array_push($this->categories, $category);
     }
 

@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace BRCas\MV\Domain\Entity;
 
+use BRCas\CA\Domain\Abstracts\EntityAbstract;
 use BRCas\CA\Domain\Exceptions\ValidationNotificationException;
-use BRCas\CA\Domain\Notification\ValidationNotification;
-use BRCas\CA\Domain\Traits\MethodMagicsTrait;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Enum\Rating;
+use BRCas\MV\Domain\Factory\VideoValidatorFactory;
 use BRCas\MV\Domain\ValueObject\Image;
 use BRCas\MV\Domain\ValueObject\Media;
 use DateTime;
 
-class Video
+class Video extends EntityAbstract
 {
-    use MethodMagicsTrait;
-
     public function __construct(
         protected string $title,
         protected string $description,
@@ -36,6 +34,8 @@ class Video
         protected ?Uuid $id = null,
         protected ?DateTime $createdAt = null,
     ) {
+        parent::__construct();
+
         $this->id = $this->id ?: Uuid::make();
         $this->createdAt = $this->createdAt ?: new DateTime();
 
@@ -108,21 +108,10 @@ class Video
 
     protected function validation()
     {
-        $notification = new ValidationNotification();
-        if (empty($this->title)) {
-            $notification->addError('video', 'Should not be empty or null');
-        }
+        VideoValidatorFactory::make()->validate($this);
 
-        if ($this->title && strlen($this->title) < 3) {
-            $notification->addError('video', 'invalid quantity');
-        }
-
-        if ($this->description && strlen($this->description) < 3) {
-            $notification->addError('video', 'invalid quantity');
-        }
-
-        if ($notification->hasError()) {
-            throw new ValidationNotificationException($notification->messages());
+        if ($this->notification->hasError()) {
+            throw new ValidationNotificationException($this->notification->messages());
         }
     }
 }
