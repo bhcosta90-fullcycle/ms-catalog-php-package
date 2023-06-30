@@ -16,7 +16,8 @@ beforeEach(function () {
         duration: 50,
         opened: true,
         rating: Rating::L,
-        videoFile: new Media('testing/testing.mp4', MediaStatus::PENDING),
+        videoFile: new Media('testing/testing-video.mp4', MediaStatus::PENDING),
+        trailerFile: new Media('testing/testing-trailer.mp4', MediaStatus::PENDING),
     );
 });
 
@@ -31,5 +32,6 @@ test("validate a payload of event", function () {
     expect($payload)->toBeInstanceOf(DTOVideoCreateEvent::class);
     expect($payload)->toBeInstanceOf(PayloadEventOutputInterface::class);
     expect($payload->id)->toBe($this->video->id());
-    expect($payload->path)->toBe($this->video->videoFile()->path);
+    expect($payload->pathVideo)->toBe($this->video->videoFile()->path);
+    expect($payload->pathTrailer)->toBe($this->video->trailerFile()->path);
 });

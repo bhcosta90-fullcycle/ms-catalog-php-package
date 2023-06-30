@@ -21,7 +21,8 @@ class VideoCreateEvent implements EventInterface
     {
         return new DTO\VideoCreateEvent(
             id: $this->video->id,
-            path: $this->video->videoFile()->path,
+            pathVideo: $this->video->videoFile()?->path,
+            pathTrailer: $this->video->trailerFile()?->path,
         );
     }
 }

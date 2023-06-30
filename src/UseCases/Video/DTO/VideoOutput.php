@@ -16,6 +16,11 @@ class VideoOutput
         public array $categories,
         public array $genres,
         public array $cast_members,
+        public ?string $thumb_file,
+        public ?string $thumb_half,
+        public ?string $banner_file,
+        public ?string $trailer_file,
+        public ?string $video_file,
     ) {
         //
     }

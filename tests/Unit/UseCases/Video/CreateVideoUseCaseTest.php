@@ -130,7 +130,11 @@ test("execute", function () use ($useCase) {
     expect($response->duration)->toBe(50);
     expect($response->opened)->toBe(true);
     expect($response->rating)->toBe('L');
-
+    expect($response->thumb_file)->toBeEmpty();
+    expect($response->thumb_half)->toBeEmpty();
+    expect($response->banner_file)->toBeEmpty();
+    expect($response->trailer_file)->toBeEmpty();
+    expect($response->video_file)->toBeEmpty();
     expect($response->id)->not->toBeEmpty();
     expect($response->created_at)->not->toBeEmpty();
 });
@@ -144,7 +148,6 @@ test("execute send a categories at input -> exception", function () use ($useCas
             duration: 50,
             opened: true,
             rating: 'L',
-            videoFile: ['path' => 'testing'],
             categories: ['category-123456', 'category-654321']
         )
     );
@@ -159,7 +162,6 @@ test("execute send a categories at input -> validate", function () use ($useCase
             duration: 50,
             opened: true,
             rating: 'L',
-            videoFile: ['path' => 'testing'],
             categories: $expect = ['category-123456', 'category-654321']
         )
     );
@@ -179,7 +181,7 @@ test("execute send a cast members at input -> exception", function () use ($useC
             castMembers: ['123456', '654321']
         )
     );
-})->throws(EntityNotFoundException::class, 'Cast member 123456, 654321 not found');
+})->throws(EntityNotFoundException::class, 'Cast members 123456, 654321 not found');
 
 test("execute send a cast members at input -> validate", function () use ($useCase) {
     $response = $useCase([], ['cast-member-123456', 'cast-member-654321'])->execute(
@@ -210,7 +212,7 @@ test("execute send a genres at input -> exception", function () use ($useCase) {
             genres: ['123456', '654321']
         )
     );
-})->throws(EntityNotFoundException::class, 'Genre 123456, 654321 not found');
+})->throws(EntityNotFoundException::class, 'Genres 123456, 654321 not found');
 
 test("execute send a genres at input -> validate", function () use ($useCase) {
     $response = $useCase([], [], ['genre-123456', 'genre-654321'])->execute(

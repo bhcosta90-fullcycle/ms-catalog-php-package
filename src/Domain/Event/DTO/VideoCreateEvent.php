@@ -8,7 +8,8 @@ class VideoCreateEvent implements PayloadEventOutputInterface
 {
     public function __construct(
         public string $id,
-        public string $path,
+        public ?string $pathVideo,
+        public ?string $pathTrailer,
     ) {
         //
     }
