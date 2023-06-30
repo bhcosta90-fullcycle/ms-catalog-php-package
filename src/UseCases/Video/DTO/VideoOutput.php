@@ -13,6 +13,9 @@ class VideoOutput
         public bool $opened,
         public string $rating,
         public string $created_at,
+        public array $categories,
+        public array $genres,
+        public array $cast_members,
     ) {
         //
     }
