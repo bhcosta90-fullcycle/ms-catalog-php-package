@@ -11,14 +11,14 @@ class CreateVideoInput
         public int $duration,
         public bool $opened,
         public string $rating,
-        public array $categories = [],
-        public array $genres = [],
-        public array $castMembers = [],
-        public array $thumbFile = [],
-        public array $thumbHalf = [],
-        public array $bannerFile = [],
-        public array $trailerFile = [],
-        public array $videoFile = [],
+        public ?array $categories = [],
+        public ?array $genres = [],
+        public ?array $castMembers = [],
+        public ?array $thumbFile = [],
+        public ?array $thumbHalf = [],
+        public ?array $bannerFile = [],
+        public ?array $trailerFile = [],
+        public ?array $videoFile = [],
     ) {
         //
     }

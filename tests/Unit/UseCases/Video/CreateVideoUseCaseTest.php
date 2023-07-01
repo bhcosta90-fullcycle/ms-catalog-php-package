@@ -45,9 +45,10 @@ beforeEach(function () {
     $this->mockRepository->shouldReceive('insert')->andReturn($this->mockEntity);
 
     $this->mockFileStorageInterface = Mockery::mock(FileStorageInterface::class);
-    $this->mockFileStorageInterface->shouldReceive('store');
+    $this->mockFileStorageInterface->shouldReceive('store')->andReturn(date('YmdHis'));
 
     $this->mockVideoEventManagerInterface = Mockery::mock(VideoEventManagerInterface::class);
+    $this->mockVideoEventManagerInterface->shouldReceive('dispatch');
 
     $this->mockCategoryRepositoryInterface = Mockery::mock(CategoryRepositoryInterface::class);
     $this->mockCastMemberRepositoryInterface = Mockery::mock(CastMemberRepositoryInterface::class);
@@ -55,10 +56,6 @@ beforeEach(function () {
 });
 
 test("execute simple", function () {
-    $this->mockCategoryRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
-    $this->mockCastMemberRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
-    $this->mockGenreRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
-
     $useCase = new CreateVideoUseCase(
         repository: $this->mockRepository,
         repositoryCategory: $this->mockCategoryRepositoryInterface,
@@ -274,4 +271,99 @@ test("execute -> success with relationship", function ($data) {
             'cast-members-654321'
         ], 'message' => 'Cast members cast-members-123456, cast-members-654321 not found'
     ],
+]);
+
+test('execute with files', function ($data) {
+    $useCase = new CreateVideoUseCase(
+        repository: $this->mockRepository,
+        repositoryCategory: $this->mockCategoryRepositoryInterface,
+        repositoryGenre: $this->mockGenreRepositoryInterface,
+        repositoryCastMember: $this->mockCastMemberRepositoryInterface,
+        transaction: mockTransaction(),
+        storage: $this->mockFileStorageInterface,
+        eventManager: $this->mockVideoEventManagerInterface,
+    );
+
+    $response = $useCase->execute(
+        input: new CreateVideoInput(
+            title: 'testing',
+            description: 'description',
+            yearLaunched: 2010,
+            duration: 50,
+            opened: true,
+            rating: 'L',
+            videoFile: $data['video-file'] ?? null,
+            trailerFile: $data['trailer-file'] ?? null,
+            bannerFile: $data['banner-file'] ?? null,
+            thumbFile: $data['thumb-file'] ?? null,
+            thumbHalf: $data['thumb-half'] ?? null,
+        )
+    );
+
+    $total = 0;
+    $dispatch = 0;
+
+    if (!empty($data['video-file'])) {
+        expect($response->video_file)->not->toBeEmpty();
+        $total++;
+        $dispatch = 1;
+    }
+
+    if (!empty($data['trailer-file'])) {
+        expect($response->trailer_file)->not->toBeEmpty();
+        $total++;
+        $dispatch = 1;
+    }
+
+    if (!empty($data['banner-file'])) {
+        expect($response->banner_file)->not->toBeEmpty();
+        $total++;
+    }
+
+    if (!empty($data['thumb-file'])) {
+        expect($response->thumb_file)->not->toBeEmpty();
+        $total++;
+    }
+
+    if (!empty($data['thumb-half'])) {
+        expect($response->thumb_half)->not->toBeEmpty();
+        $total++;
+    }
+
+    if ($total > 0) {
+        $this->mockFileStorageInterface->shouldHaveReceived('store')->times($total);
+    } else {
+        $this->mockFileStorageInterface->shouldNotHaveReceived('store');
+    }
+
+    if ($dispatch > 0) {
+        $this->mockVideoEventManagerInterface->shouldHaveReceived('dispatch')->times(1);
+    } else {
+        $this->mockVideoEventManagerInterface->shouldNotHaveReceived('dispatch');
+    }
+
+})->with([
+    "all-files" => fn () => [
+        'video-file' => ['tmp' => '/tmp/testing-video-file'],
+        'trailer-file' => ['tmp' => '/tmp/testing-trailer-file'],
+        'banner-file' => ['tmp' => '/tmp/testing-banner-file'],
+        'thumb-file' => ['tmp' => '/tmp/testing-thumb-file'],
+        'thumb-half' => ['tmp' => '/tmp/testing-thumb-half'],
+    ],
+    "video-file" => fn () => [
+        'video-file' => ['tmp' => '/tmp/testing-video-file'],
+    ],
+    "trailer-file" => fn () => [
+        'trailer-file' => ['tmp' => '/tmp/testing-trailer-file'],
+    ],
+    "banner-file" => fn () => [
+        'banner-file' => ['tmp' => '/tmp/testing-banner-file'],
+    ],
+    "thumb-file" => fn () => [
+        'thumb-file' => ['tmp' => '/tmp/testing-thumb-file'],
+    ],
+    "thumb-half" => fn () => [
+        'thumb-half' => ['tmp' => '/tmp/testing-thumb-half'],
+    ],
+    "any file" => fn() => [],
 ]);

@@ -5,6 +5,7 @@ namespace BRCas\MV\UseCases\Video;
 use BRCas\CA\Domain\Exceptions\EntityNotFoundException;
 use BRCas\CA\UseCase\{DatabaseTransactionInterface, FileStorageInterface};
 use BRCas\MV\Domain\Builder\Video\CreateBuilderVideo;
+use BRCas\MV\Domain\Enum\MediaStatus;
 use BRCas\MV\Domain\Repository\{
     CastMemberRepositoryInterface,
     CategoryRepositoryInterface,

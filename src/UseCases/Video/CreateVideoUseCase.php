@@ -17,8 +17,8 @@ class CreateVideoUseCase extends BaseVideoUseCase
             $this->repository->insert($this->builder->getEntity());
             $this->transaction->commit();
 
-            if (!empty($files['video-file']) || !empty($files['banner-file'])) {
-                $this->eventManager->dispatch(new VideoCreateEvent($this->entity));
+            if (!empty($files['video-file']) || !empty($files['trailer-file'])) {
+                $this->eventManager->dispatch(new VideoCreateEvent($this->builder->getEntity()));
             }
 
             return $this->output();
@@ -45,7 +45,7 @@ class CreateVideoUseCase extends BaseVideoUseCase
             thumb_half: $this->builder->getEntity()->thumbHalf()?->path(),
             banner_file: $this->builder->getEntity()->bannerFile()?->path(),
             trailer_file: $this->builder->getEntity()->trailerFile()?->path,
-            video_file: $this->builder->getEntity()->trailerFile()?->path,
+            video_file: $this->builder->getEntity()->videoFile()?->path,
             created_at: $this->builder->getEntity()->createdAt(),
         );
     }
