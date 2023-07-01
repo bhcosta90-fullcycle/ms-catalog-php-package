@@ -216,6 +216,27 @@ test("execute -> success with relationship", function ($data) {
     expect($response->categories)->toBe(array_values($data['categories'] ?? []));
     expect($response->genres)->toBe(array_values($data['genres'] ?? []));
     expect($response->cast_members)->toBe(array_values($data['cast-members'] ?? []));
+
+    $this->mockRepository->shouldHaveReceived('insert')->times(1);
+    
+    if ($data['categories'] ?? []) {
+        $this->mockCategoryRepositoryInterface->shouldHaveReceived('getIdsByListId')->times(1);
+    } else {
+        $this->mockCategoryRepositoryInterface->shouldNotHaveReceived('getIdsByListId'); 
+    }
+
+    if ($data['genres'] ?? []) {
+        $this->mockGenreRepositoryInterface->shouldHaveReceived('getIdsByListId')->times(1);
+    } else {
+        $this->mockGenreRepositoryInterface->shouldNotHaveReceived('getIdsByListId');
+    }
+
+    if ($data['cast-members'] ?? []) {
+        $this->mockCastMemberRepositoryInterface->shouldHaveReceived('getIdsByListId')->times(1);
+    } else {
+        $this->mockCastMemberRepositoryInterface->shouldNotHaveReceived('getIdsByListId');
+    }
+
 })->with([
     "category" => fn () => [
         'categories' => [

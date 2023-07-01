@@ -72,9 +72,17 @@ abstract class BaseVideoUseCase
 
     protected function validateAllIds($input)
     {
-        $this->validateIds($input->categories, $this->repositoryCategory, "Category", "Categories");
-        $this->validateIds($input->genres, $this->repositoryGenre, "Genre");
-        $this->validateIds($input->castMembers, $this->repositoryCastMember, "Cast member");
+        if (count($input->categories)) {
+            $this->validateIds($input->categories, $this->repositoryCategory, "Category", "Categories");
+        }
+
+        if (count($input->genres)) {
+            $this->validateIds($input->genres, $this->repositoryGenre, "Genre");
+        }
+
+        if (count($input->castMembers)) {
+            $this->validateIds($input->castMembers, $this->repositoryCastMember, "Cast member");
+        }
     }
 
     protected function validateIds(array $ids, $repository, string $singular, ?string $plural = null)
