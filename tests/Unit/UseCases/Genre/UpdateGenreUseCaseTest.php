@@ -18,7 +18,7 @@ beforeEach(function () {
 
     $entity = Mockery::mock(Genre::class, $this->data = [
         'new category',
-        array_keys($this->categories),
+        $this->categories,
         true,
         $this->id = Uuid::make()
     ]);
@@ -47,7 +47,7 @@ test("update a domain -> enable", function () {
     $response = $this->useCase->execute(new Input(
         id: $this->id,
         name: $this->data[0],
-        categories: array_keys($this->categories)
+        categories: $this->categories
     ));
 
     expect($response)->toBeInstanceOf(Output::class);
@@ -67,7 +67,7 @@ test("update a domain -> disabled", function () {
     $response = $this->useCase->execute(new Input(
         id: $this->id,
         name: $this->data[0],
-        categories: array_keys($this->categories),
+        categories: $this->categories,
         isActive: false,
     ));
 

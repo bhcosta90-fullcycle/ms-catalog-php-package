@@ -18,7 +18,7 @@ beforeEach(function () {
 
     $entity = Mockery::mock(Genre::class, $this->data = [
         'new category',
-        array_keys($this->categories),
+        $this->categories,
     ]);
     $entity->shouldReceive('id')->andReturn($this->id = Uuid::make());
     $entity->shouldReceive('createdAt');
@@ -38,7 +38,7 @@ beforeEach(function () {
 test("create a new domain", function () {
     $response = $this->useCase->execute(new Input(
         name: $this->data[0],
-        categories: array_keys($this->categories)
+        categories: $this->categories
     ));
 
     expect($response)->toBeInstanceOf(Output::class);
