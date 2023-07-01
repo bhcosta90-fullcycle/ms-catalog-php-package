@@ -8,7 +8,6 @@ class UpdateVideoInput
         public string $id,
         public string $title,
         public string $description,
-        public string $createdAt,
         public array $categories = [],
         public array $genres = [],
         public array $castMembers = [],

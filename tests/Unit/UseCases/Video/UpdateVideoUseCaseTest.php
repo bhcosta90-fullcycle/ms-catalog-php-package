@@ -63,7 +63,6 @@ test("execute simple", function () {
             id: $this->id,
             title: 'testing',
             description: 'description',
-            createdAt: $this->date,
         )
     );
 
@@ -114,7 +113,6 @@ test("execute -> exception", function ($data) {
                 categories: $data['categories'] ?? [],
                 genres: $data['genres'] ?? [],
                 castMembers: $data['cast-members'] ?? [],
-                createdAt: $this->date,
             )
         );
         expect(false)->toBeTrue();
@@ -196,7 +194,6 @@ test("execute -> success with relationship", function ($data) {
             categories: $data['categories'] ?? [],
             genres: $data['genres'] ?? [],
             castMembers: $data['cast-members'] ?? [],
-            createdAt: $this->date,
         )
     );
 
@@ -281,7 +278,6 @@ test('execute with files', function ($data) {
             bannerFile: $data['banner-file'] ?? null,
             thumbFile: $data['thumb-file'] ?? null,
             thumbHalf: $data['thumb-half'] ?? null,
-            createdAt: $this->date,
         )
     );
 
