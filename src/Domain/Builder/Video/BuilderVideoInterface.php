@@ -17,7 +17,7 @@ interface BuilderVideoInterface
 
     public function addImageThumb($filePath): self;
 
-    public function addImageThumbHalf($filePath): self;
+    public function addImageHalf($filePath): self;
 
     public function addImageBanner($filePath): self;
 

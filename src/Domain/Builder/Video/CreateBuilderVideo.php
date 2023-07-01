@@ -66,7 +66,7 @@ class CreateBuilderVideo implements BuilderVideoInterface
         return $this;
     }
 
-    public function addImageThumbHalf($path): self
+    public function addImageHalf($path): self
     {
         $this->entity->setThumbHalf(new Image(image: $path));
         return $this;

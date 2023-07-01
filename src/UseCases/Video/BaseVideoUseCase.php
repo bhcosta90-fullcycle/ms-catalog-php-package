@@ -58,7 +58,7 @@ abstract class BaseVideoUseCase
         }
 
         if ($path = $this->storeFile($pathFile, $input->thumbHalf)) {
-            $this->builder->addImageThumbHalf($path);
+            $this->builder->addImageHalf($path);
             $response['thumb-half'] = $path;
         }
 
