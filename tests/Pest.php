@@ -69,8 +69,14 @@ function mockItem($items = []): ItemInterface
 
 function mockKeyValue($items = []): KeyValueInterface
 {
+    $newItem = [];
+
+    foreach($items as $item) {
+        $newItem[$item] = $item;
+    }
+
     $mockItem = Mockery::mock(KeyValueInterface::class);
-    $mockItem->shouldReceive('items')->andReturn($items);
+    $mockItem->shouldReceive('items')->andReturn($newItem);
     return $mockItem;
 }
 

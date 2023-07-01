@@ -12,8 +12,8 @@ use BRCas\MV\UseCases\Genre\DTO\GenreOutput as Output;
 beforeEach(function () {
     $mockCategoryRepository = Mockery::mock(CategoryRepositoryInterface::class);
     $mockCategoryRepository->shouldReceive('getIdsByListId')->andReturn(mockKeyValue($this->categories = [
-        'abc' => 'abc',
-        'def' => 'def'
+        'abc',
+        'def'
     ]));
 
     $entity = Mockery::mock(Genre::class, $this->data = [

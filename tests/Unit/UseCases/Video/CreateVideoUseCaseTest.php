@@ -6,17 +6,19 @@ use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\CA\UseCase\FileStorageInterface;
 use BRCas\MV\Domain\Entity\Video;
 use BRCas\MV\Domain\Enum\Rating;
-use BRCas\MV\Domain\Repository\CastMemberRepositoryInterface;
-use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
-use BRCas\MV\Domain\Repository\GenreRepositoryInterface;
-use BRCas\MV\Domain\Repository\VideoRepositoryInterface;
+use BRCas\MV\Domain\Repository\{
+    CastMemberRepositoryInterface,
+    CategoryRepositoryInterface,
+    GenreRepositoryInterface,
+    VideoRepositoryInterface
+};
 use BRCas\MV\UseCases\Video\CreateVideoUseCase;
 use BRCas\MV\UseCases\Video\DTO\CreateVideoInput;
 use BRCas\MV\UseCases\Video\DTO\VideoOutput;
 use BRCas\MV\UseCases\Video\Interfaces\VideoEventManagerInterface;
 
-$mockEntity = function () {
-    $mock = Mockery::mock(Video::class, [
+beforeEach(function () {
+    $this->mockEntity = Mockery::mock(Video::class, [
         'testing',
         'description',
         2010,
@@ -36,79 +38,35 @@ $mockEntity = function () {
         $date = new DateTime(),
     ]);
 
-    $mock->shouldReceive('id')->andReturn((string) $id);
-    $mock->shouldReceive('createdAt')->andReturn($date->format('Y-m-d H:i:s'));
+    $this->mockEntity->shouldReceive('id')->andReturn((string) $id);
+    $this->mockEntity->shouldReceive('createdAt')->andReturn($date->format('Y-m-d H:i:s'));
 
-    return $mock;
-};
+    $this->mockRepository = Mockery::mock(VideoRepositoryInterface::class);
+    $this->mockRepository->shouldReceive('insert')->andReturn($this->mockEntity);
 
-$mockRepository = function () use ($mockEntity) {
-    $mock = Mockery::mock(VideoRepositoryInterface::class);
-    $mock->shouldReceive('insert')->andReturn($mockEntity());
-    return $mock;
-};
+    $this->mockFileStorageInterface = Mockery::mock(FileStorageInterface::class);
+    $this->mockFileStorageInterface->shouldReceive('store');
 
-$mockFileStorageInterface = function () {
-    $mock = Mockery::mock(FileStorageInterface::class);
-    $mock->shouldReceive('store');
+    $this->mockVideoEventManagerInterface = Mockery::mock(VideoEventManagerInterface::class);
 
-    return $mock;
-};
+    $this->mockCategoryRepositoryInterface = Mockery::mock(CategoryRepositoryInterface::class);
+    $this->mockCastMemberRepositoryInterface = Mockery::mock(CastMemberRepositoryInterface::class);
+    $this->mockGenreRepositoryInterface = Mockery::mock(GenreRepositoryInterface::class);
+});
 
-$mockEventManagerInterface = function () {
-    return Mockery::mock(VideoEventManagerInterface::class);
-};
+test("execute simple", function () {
+    $this->mockCategoryRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
+    $this->mockCastMemberRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
+    $this->mockGenreRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
 
-$mockCategoryRepository = function ($items = []) {
-    $newItems = [];
-    foreach ($items as $item) {
-        $newItems[$item] = $item;
-    }
-
-    $mock = Mockery::mock(CategoryRepositoryInterface::class);
-    $mock->shouldReceive('getIdsByListId')->andReturn(mockKeyValue($newItems));
-    return $mock;
-};
-
-$mockCastMemberRepository = function ($items = []) {
-    $newItems = [];
-    foreach ($items as $item) {
-        $newItems[$item] = $item;
-    }
-
-    $mock = Mockery::mock(CastMemberRepositoryInterface::class);
-    $mock->shouldReceive('getIdsByListId')->andReturn(mockKeyValue($newItems));
-    return $mock;
-};
-
-$mockGenreRepository = function ($items = []) {
-    $newItems = [];
-    foreach ($items as $item) {
-        $newItems[$item] = $item;
-    }
-
-    $mock = Mockery::mock(GenreRepositoryInterface::class);
-    $mock->shouldReceive('getIdsByListId')->andReturn(mockKeyValue($newItems));
-    return $mock;
-};
-
-
-test("execute", function () use (
-    $mockRepository,
-    $mockCategoryRepository,
-    $mockGenreRepository,
-    $mockCastMemberRepository,
-    $mockFileStorageInterface,
-    $mockEventManagerInterface
-) {
     $useCase = new CreateVideoUseCase(
-        repository: $mockRepository = $mockRepository(),
-        repositoryCategory: $mockCategoryRepository = $mockCategoryRepository(),
-        repositoryGenre: $mockGenreRepository = $mockGenreRepository(),
-        repositoryCastMember: $mockCastMemberRepository = $mockCastMemberRepository(),
+        repository: $this->mockRepository,
+        repositoryCategory: $this->mockCategoryRepositoryInterface,
+        repositoryGenre: $this->mockGenreRepositoryInterface,
+        repositoryCastMember: $this->mockCastMemberRepositoryInterface,
         transaction: mockTransaction(),
-        storage: $mockFileStorageInterface = $mockFileStorageInterface(),
-        eventManager: $mockEventManagerInterface = $mockEventManagerInterface(),
+        storage: $this->mockFileStorageInterface,
+        eventManager: $this->mockVideoEventManagerInterface,
     );
 
     $response = $useCase->execute(
@@ -137,28 +95,26 @@ test("execute", function () use (
     expect($response->id)->not->toBeEmpty();
     expect($response->created_at)->not->toBeEmpty();
 
-    $mockRepository->shouldHaveReceived('insert')->times(1);
+    $this->mockRepository->shouldHaveReceived('insert')->times(1);
 });
 
-test("execute -> exception", function ($data) use (
-    $mockRepository,
-    $mockCategoryRepository,
-    $mockGenreRepository,
-    $mockCastMemberRepository,
-    $mockFileStorageInterface,
-    $mockEventManagerInterface
-) {
+test("execute -> exception", function ($data) {
+    $this->mockCategoryRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
+    $this->mockCastMemberRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
+    $this->mockGenreRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
+
     $useCase = new CreateVideoUseCase(
-        repository: $mockRepository = $mockRepository(),
-        repositoryCategory: $mockCategoryRepository = $mockCategoryRepository(),
-        repositoryGenre: $mockGenreRepository = $mockGenreRepository(),
-        repositoryCastMember: $mockCastMemberRepository = $mockCastMemberRepository(),
+        repository: $this->mockRepository,
+        repositoryCategory: $this->mockCategoryRepositoryInterface,
+        repositoryGenre: $this->mockGenreRepositoryInterface,
+        repositoryCastMember: $this->mockCastMemberRepositoryInterface,
         transaction: mockTransaction(),
-        storage: $mockFileStorageInterface = $mockFileStorageInterface(),
-        eventManager: $mockEventManagerInterface = $mockEventManagerInterface(),
+        storage: $this->mockFileStorageInterface,
+        eventManager: $this->mockVideoEventManagerInterface,
     );
 
     try {
+
         $useCase->execute(
             input: new CreateVideoInput(
                 title: array_key_exists('name', $data) ? $data['name'] : 'testing',
@@ -173,60 +129,125 @@ test("execute -> exception", function ($data) use (
             )
         );
         expect(false)->toBeTrue();
-    } catch (EntityNotFoundException $e) {
-        expect($e->getMessage())->toBe($data['message']);
-    } catch (ValidationNotificationException $e) {
+    } catch (EntityNotFoundException | ValidationNotificationException $e) {
         expect($e->getMessage())->toBe($data['message']);
     }
-})
-    ->with([
-        "category" => fn () => [
-            'categories' => [
-                'category-123456',
-            ], 'message' => 'Category category-123456 not found'
-        ],
-        "name is min length" => fn () => [
-            'name' => 'a',
-            'message' => 'video: The Title minimum is 3'
-        ],
-        "name is max length" => fn () => [
-            'name' => str_repeat('a', 256),
-            'message' => 'video: The Title maximum is 255'
-        ],
-        "description is min length" => fn () => [
-            'description' => 'a',
-            'message' => 'video: The Description minimum is 3'
-        ],
-        "description is max length" => fn () => [
-            'description' => str_repeat('a', 256),
-            'message' => 'video: The Description maximum is 255'
-        ],
-        "categories" => fn () => [
-            'categories' => [
-                'category-123456',
-                'category-654321'
-            ], 'message' => 'Categories category-123456, category-654321 not found'
-        ],
-        "genre" => fn () => [
-            'genres' => [
-                'genre-123456',
-            ], 'message' => 'Genre genre-123456 not found'
-        ],
-        "genres" => fn () => [
-            'genres' => [
-                'genre-123456',
-                'genre-654321'
-            ], 'message' => 'Genres genre-123456, genre-654321 not found'
-        ],
-        "cast member" => fn () => [
-            'cast-members' => [
-                'cast-members-123456',
-            ], 'message' => 'Cast member cast-members-123456 not found'
-        ],
-        "cast members" => fn () => [
-            'cast-members' => [
-                'cast-members-123456',
-                'cast-members-654321'
-            ], 'message' => 'Cast members cast-members-123456, cast-members-654321 not found'
-        ],
-    ]);
+})->with([
+    "name is min length" => fn () => [
+        'name' => 'a',
+        'message' => 'video: The Title minimum is 3'
+    ],
+    "name is max length" => fn () => [
+        'name' => str_repeat('a', 256),
+        'message' => 'video: The Title maximum is 255'
+    ],
+    "description is min length" => fn () => [
+        'description' => 'a',
+        'message' => 'video: The Description minimum is 3'
+    ],
+    "description is max length" => fn () => [
+        'description' => str_repeat('a', 256),
+        'message' => 'video: The Description maximum is 255'
+    ],
+    "category" => fn () => [
+        'categories' => [
+            'category-123456',
+        ], 'message' => 'Category category-123456 not found'
+    ],
+    "categories" => fn () => [
+        'categories' => [
+            'category-123456',
+            'category-654321'
+        ], 'message' => 'Categories category-123456, category-654321 not found'
+    ],
+    "genre" => fn () => [
+        'genres' => [
+            'genre-123456',
+        ], 'message' => 'Genre genre-123456 not found'
+    ],
+    "genres" => fn () => [
+        'genres' => [
+            'genre-123456',
+            'genre-654321'
+        ], 'message' => 'Genres genre-123456, genre-654321 not found'
+    ],
+    "cast member" => fn () => [
+        'cast-members' => [
+            'cast-members-123456',
+        ], 'message' => 'Cast member cast-members-123456 not found'
+    ],
+    "cast members" => fn () => [
+        'cast-members' => [
+            'cast-members-123456',
+            'cast-members-654321'
+        ], 'message' => 'Cast members cast-members-123456, cast-members-654321 not found'
+    ],
+]);
+
+test("execute -> success with relationship", function ($data) {
+    $this->mockCategoryRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue($data['categories'] ?? []));
+    $this->mockGenreRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue($data['genres'] ?? []));
+    $this->mockCastMemberRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue($data['cast-members'] ?? []));
+
+    $useCase = new CreateVideoUseCase(
+        repository: $this->mockRepository,
+        repositoryCategory: $this->mockCategoryRepositoryInterface,
+        repositoryGenre: $this->mockGenreRepositoryInterface,
+        repositoryCastMember: $this->mockCastMemberRepositoryInterface,
+        transaction: mockTransaction(),
+        storage: $this->mockFileStorageInterface,
+        eventManager: $this->mockVideoEventManagerInterface,
+    );
+
+    $response = $useCase->execute(
+        input: new CreateVideoInput(
+            title: array_key_exists('name', $data) ? $data['name'] : 'testing',
+            description: $data['description'] ?? 'description',
+            yearLaunched: 2010,
+            duration: 50,
+            opened: true,
+            rating: 'L',
+            categories: $data['categories'] ?? [],
+            genres: $data['genres'] ?? [],
+            castMembers: $data['cast-members'] ?? [],
+        )
+    );
+
+    expect($response->categories)->toBe(array_values($data['categories'] ?? []));
+    expect($response->genres)->toBe(array_values($data['genres'] ?? []));
+    expect($response->cast_members)->toBe(array_values($data['cast-members'] ?? []));
+})->with([
+    "category" => fn () => [
+        'categories' => [
+            'category-123456',
+        ], 'message' => 'Category category-123456 not found'
+    ],
+    "categories" => fn () => [
+        'categories' => [
+            'category-123456',
+            'category-654321'
+        ], 'message' => 'Categories category-123456, category-654321 not found'
+    ],
+    "genre" => fn () => [
+        'genres' => [
+            'genre-123456',
+        ], 'message' => 'Genre genre-123456 not found'
+    ],
+    "genres" => fn () => [
+        'genres' => [
+            'genre-123456',
+            'genre-654321'
+        ], 'message' => 'Genres genre-123456, genre-654321 not found'
+    ],
+    "cast member" => fn () => [
+        'cast-members' => [
+            'cast-members-123456',
+        ], 'message' => 'Cast member cast-members-123456 not found'
+    ],
+    "cast members" => fn () => [
+        'cast-members' => [
+            'cast-members-123456',
+            'cast-members-654321'
+        ], 'message' => 'Cast members cast-members-123456, cast-members-654321 not found'
+    ],
+]);
