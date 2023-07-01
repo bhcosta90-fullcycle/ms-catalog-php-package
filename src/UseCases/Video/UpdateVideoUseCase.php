@@ -30,11 +30,12 @@ class UpdateVideoUseCase extends BaseVideoUseCase
             $files = $this->store($input);
             
             $this->repository->update($this->builder->getEntity());
-            $this->transaction->commit();
 
             if (!empty($files['video-file']) || !empty($files['trailer-file'])) {
                 $this->eventManager->dispatch(new VideoCreateEvent($this->builder->getEntity()));
             }
+
+            $this->transaction->commit();
 
             return $this->output();
         } catch (Throwable $e) {
