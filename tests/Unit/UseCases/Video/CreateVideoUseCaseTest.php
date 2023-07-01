@@ -1,6 +1,7 @@
 <?php
 
 use BRCas\CA\Domain\Exceptions\EntityNotFoundException;
+use BRCas\CA\Domain\Exceptions\ValidationNotificationException;
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\CA\UseCase\FileStorageInterface;
 use BRCas\MV\Domain\Entity\Video;
@@ -139,7 +140,7 @@ test("execute", function () use (
     $mockRepository->shouldHaveReceived('insert')->times(1);
 });
 
-test("execute send a categories at input -> exception", function ($data) use (
+test("execute -> exception", function ($data) use (
     $mockRepository,
     $mockCategoryRepository,
     $mockGenreRepository,
@@ -160,8 +161,8 @@ test("execute send a categories at input -> exception", function ($data) use (
     try {
         $useCase->execute(
             input: new CreateVideoInput(
-                title: 'testing',
-                description: 'description',
+                title: array_key_exists('name', $data) ? $data['name'] : 'testing',
+                description: $data['description'] ?? 'description',
                 yearLaunched: 2010,
                 duration: 50,
                 opened: true,
@@ -171,7 +172,10 @@ test("execute send a categories at input -> exception", function ($data) use (
                 castMembers: $data['cast-members'] ?? [],
             )
         );
+        expect(false)->toBeTrue();
     } catch (EntityNotFoundException $e) {
+        expect($e->getMessage())->toBe($data['message']);
+    } catch (ValidationNotificationException $e) {
         expect($e->getMessage())->toBe($data['message']);
     }
 })
@@ -180,6 +184,22 @@ test("execute send a categories at input -> exception", function ($data) use (
             'categories' => [
                 'category-123456',
             ], 'message' => 'Category category-123456 not found'
+        ],
+        "name is min length" => fn () => [
+            'name' => 'a',
+            'message' => 'video: The Title minimum is 3'
+        ],
+        "name is max length" => fn () => [
+            'name' => str_repeat('a', 256),
+            'message' => 'video: The Title maximum is 255'
+        ],
+        "description is min length" => fn () => [
+            'description' => 'a',
+            'message' => 'video: The Description minimum is 3'
+        ],
+        "description is max length" => fn () => [
+            'description' => str_repeat('a', 256),
+            'message' => 'video: The Description maximum is 255'
         ],
         "categories" => fn () => [
             'categories' => [
