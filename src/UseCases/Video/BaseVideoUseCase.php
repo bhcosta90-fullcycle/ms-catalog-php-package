@@ -68,7 +68,7 @@ abstract class BaseVideoUseCase
     protected function storeFile(string $path, ?array $media = null): ?string
     {
         if ($media) {
-            return $this->storage->store(path: $path, file: $media);
+            return $this->storage->store(path: "video/" . $path, file: $media);
         }
 
         return null;
