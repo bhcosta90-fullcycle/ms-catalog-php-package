@@ -96,6 +96,9 @@ test("execute simple", function () {
     expect($response->created_at)->not->toBeEmpty();
 
     $this->mockRepository->shouldHaveReceived('insert')->times(1);
+    $this->mockCategoryRepositoryInterface->shouldNotHaveReceived('getIdsByListId');
+    $this->mockGenreRepositoryInterface->shouldNotHaveReceived('getIdsByListId');
+    $this->mockCastMemberRepositoryInterface->shouldNotHaveReceived('getIdsByListId');
 });
 
 test("execute -> exception", function ($data) {
