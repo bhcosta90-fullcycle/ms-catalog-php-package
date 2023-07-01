@@ -45,16 +45,16 @@ class CreateBuilderVideo implements BuilderVideoInterface
         }
     }
 
-    public function addMediaVideo($path, MediaStatus $status): self
+    public function addMediaVideo($path, MediaStatus $status, ?string $encoded = null): self
     {
-        $media = new Media(path: $path, status: MediaStatus::PENDING);
+        $media = new Media(path: $path, status: MediaStatus::PENDING, encoded: $encoded);
         $this->entity->setVideoFile($media);
         return $this;
     }
 
-    public function addMediaTrailer($path, MediaStatus $status): self
+    public function addMediaTrailer($path, MediaStatus $status, ?string $encoded = null): self
     {
-        $media = new Media(path: $path, status: MediaStatus::PENDING);
+        $media = new Media(path: $path, status: MediaStatus::PENDING, encoded: $encoded);
         $this->entity->setTrailerFile($media);
 
         return $this;
