@@ -3,7 +3,6 @@
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Repository\CategoryRepositoryInterface;
 use BRCas\MV\UseCases\Category\ListCategoriesUseCase;
-use BRCas\MV\UseCases\Category\DTO\ListCategories\Input;
 use BRCas\MV\UseCases\Category\DTO\ListCategories\Output;
 
 test("list all when is empty", function () {
@@ -16,7 +15,7 @@ test("list all when is empty", function () {
         repository: $repository
     );
 
-    $response = $useCase->execute(new Input());
+    $response = $useCase->execute();
 
     expect($response)->toBeInstanceOf(Output::class);
     expect($response->items)->toHaveCount(0);
@@ -46,7 +45,7 @@ test("list all when is not empty", function () {
         repository: $repository
     );
 
-    $response = $useCase->execute(new Input());
+    $response = $useCase->execute();
 
     expect($response)->toBeInstanceOf(Output::class);
     expect($response->items)->toHaveCount(1);

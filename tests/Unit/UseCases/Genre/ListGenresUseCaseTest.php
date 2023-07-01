@@ -3,7 +3,6 @@
 use BRCas\CA\Domain\ValueObject\Uuid;
 use BRCas\MV\Domain\Repository\GenreRepositoryInterface;
 use BRCas\MV\UseCases\Genre\ListGenresUseCase;
-use BRCas\MV\UseCases\Genre\DTO\ListGenres\Input;
 use BRCas\MV\UseCases\Genre\DTO\ListGenres\Output;
 
 test("list all when is empty", function () {
@@ -16,7 +15,7 @@ test("list all when is empty", function () {
         repository: $repository
     );
 
-    $response = $useCase->execute(new Input());
+    $response = $useCase->execute();
 
     expect($response)->toBeInstanceOf(Output::class);
     expect($response->items)->toHaveCount(0);
@@ -46,7 +45,7 @@ test("list all when is not empty", function () {
         repository: $repository
     );
 
-    $response = $useCase->execute(new Input());
+    $response = $useCase->execute();
 
     expect($response)->toBeInstanceOf(Output::class);
     expect($response->items)->toHaveCount(1);
