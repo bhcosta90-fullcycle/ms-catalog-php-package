@@ -8,7 +8,7 @@ class VideoOutput
         public string $id,
         public string $title,
         public string $description,
-        public int $yearLaunched,
+        public int $year_launched,
         public int $duration,
         public bool $opened,
         public string $rating,

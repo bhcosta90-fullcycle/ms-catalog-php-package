@@ -43,7 +43,7 @@ class CreateVideoUseCase extends BaseVideoUseCase
             id: $this->builder->getEntity()->id(),
             title: $this->builder->getEntity()->title,
             description: $this->builder->getEntity()->description,
-            yearLaunched: $this->builder->getEntity()->yearLaunched,
+            year_launched: $this->builder->getEntity()->yearLaunched,
             duration: $this->builder->getEntity()->duration,
             opened: $this->builder->getEntity()->opened,
             rating: $this->builder->getEntity()->rating->value,

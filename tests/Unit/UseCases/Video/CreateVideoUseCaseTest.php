@@ -79,7 +79,7 @@ test("execute simple", function () {
     expect($response)->toBeInstanceOf(VideoOutput::class);
     expect($response->title)->toBe('testing');
     expect($response->description)->toBe('description');
-    expect($response->yearLaunched)->toBe(2010);
+    expect($response->year_launched)->toBe(2010);
     expect($response->duration)->toBe(50);
     expect($response->opened)->toBe(true);
     expect($response->rating)->toBe('L');
