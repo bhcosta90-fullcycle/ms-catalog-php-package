@@ -3,27 +3,33 @@
 namespace BRCas\MV\UseCases\Video;
 
 use BRCas\MV\Domain\Builder\Video\BuilderVideoInterface;
-use BRCas\MV\Domain\Builder\Video\CreateBuilderVideo;
+use BRCas\MV\Domain\Builder\Video\UpdateBuilderVideo;
 use BRCas\MV\Domain\Event\VideoCreateEvent;
 use Throwable;
 
-class CreateVideoUseCase extends BaseVideoUseCase
+class UpdateVideoUseCase extends BaseVideoUseCase
 {
     protected function builder(): BuilderVideoInterface
     {
-        return new CreateBuilderVideo;
+        return new UpdateBuilderVideo;
     }
     
-    public function execute(DTO\CreateVideoInput $input): DTO\VideoOutput
+    public function execute(DTO\UpdateVideoInput $input): DTO\VideoOutput
     {
         try {
             $this->validateAllIds($input);
-            $this->builder->createEntity($input);
-            $this->builder->addIds($input);
+            $entity = $this->repository->getById($input->id);
 
+            $entity->update(
+                title: $input->title,
+                description: $input->description,
+            );
+
+            $this->builder->createEntity($entity);
+            $this->builder->addIds($input);
             $files = $this->store($input);
             
-            $this->repository->insert($this->builder->getEntity());
+            $this->repository->update($this->builder->getEntity());
             $this->transaction->commit();
 
             if (!empty($files['video-file']) || !empty($files['trailer-file'])) {

@@ -42,6 +42,13 @@ class Video extends EntityAbstract
         $this->validation();
     }
 
+    public function update(string $title, ?string $description) {
+        $this->title = $title;
+        $this->description = $description;
+
+        $this->validation();
+    }
+
     public function addCategory(string $category)
     {
         array_push($this->categories, $category);

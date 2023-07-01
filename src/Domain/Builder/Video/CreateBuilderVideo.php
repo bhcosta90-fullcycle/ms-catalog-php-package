@@ -28,12 +28,10 @@ class CreateBuilderVideo implements BuilderVideoInterface
             rating: Rating::from($input->rating)
         );
 
-        $this->addIds($input);
-
         return $this->entity;
     }
 
-    protected function addIds(object $input) {
+    public function addIds(object $input) {
         foreach ($input->categories as $category) {
             $this->entity->addCategory($category);
         }

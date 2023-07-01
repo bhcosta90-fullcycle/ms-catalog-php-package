@@ -11,37 +11,30 @@ use BRCas\MV\Domain\Repository\{
     GenreRepositoryInterface,
     VideoRepositoryInterface
 };
-use BRCas\MV\UseCases\Video\CreateVideoUseCase;
-use BRCas\MV\UseCases\Video\DTO\CreateVideoInput;
+use BRCas\MV\UseCases\Video\UpdateVideoUseCase;
+use BRCas\MV\UseCases\Video\DTO\UpdateVideoInput;
 use BRCas\MV\UseCases\Video\DTO\VideoOutput;
 use BRCas\MV\UseCases\Video\Interfaces\VideoEventManagerInterface;
+use Ramsey\Uuid\Uuid as UuidUuid;
 
 beforeEach(function () {
-    $this->mockEntity = Mockery::mock(Video::class, [
-        'testing',
-        'description',
-        2010,
-        50,
-        true,
-        Rating::L,
-        null,
-        null,
-        null,
-        null,
-        null,
-        [],
-        [],
-        [],
-        false,
-        $id = Uuid::make(),
-        $date = new DateTime(),
-    ]);
+    $this->id = (string) UuidUuid::uuid4();
+    $this->date = '2020-01-01 00:00:00';
 
-    $this->mockEntity->shouldReceive('id')->andReturn((string) $id);
-    $this->mockEntity->shouldReceive('createdAt')->andReturn($date->format('Y-m-d H:i:s'));
+    $this->entity = new Video(
+        title: 'testing',
+        description: 'testing description',
+        yearLaunched: 2010,
+        duration: 50,
+        opened: true,
+        rating: Rating::L,
+        createdAt: new DateTime($this->date),
+        id: new Uuid($this->id),
+    );
 
     $this->mockRepository = Mockery::mock(VideoRepositoryInterface::class);
-    $this->mockRepository->shouldReceive('insert')->andReturn($this->mockEntity);
+    $this->mockRepository->shouldReceive('getById')->andReturn($this->entity);
+    $this->mockRepository->shouldReceive('update')->andReturn($this->entity);
 
     $this->mockFileStorageInterface = Mockery::mock(FileStorageInterface::class);
     $this->mockFileStorageInterface->shouldReceive('store')->andReturn(date('YmdHis'));
@@ -55,7 +48,7 @@ beforeEach(function () {
 });
 
 test("execute simple", function () {
-    $useCase = new CreateVideoUseCase(
+    $useCase = new UpdateVideoUseCase(
         repository: $this->mockRepository,
         repositoryCategory: $this->mockCategoryRepositoryInterface,
         repositoryGenre: $this->mockGenreRepositoryInterface,
@@ -66,13 +59,11 @@ test("execute simple", function () {
     );
 
     $response = $useCase->execute(
-        input: new CreateVideoInput(
+        input: new UpdateVideoInput(
+            id: $this->id,
             title: 'testing',
             description: 'description',
-            yearLaunched: 2010,
-            duration: 50,
-            opened: true,
-            rating: 'L',
+            createdAt: $this->date,
         )
     );
 
@@ -88,10 +79,11 @@ test("execute simple", function () {
     expect($response->banner_file)->toBeEmpty();
     expect($response->trailer_file)->toBeEmpty();
     expect($response->video_file)->toBeEmpty();
-    expect($response->id)->not->toBeEmpty();
-    expect($response->created_at)->not->toBeEmpty();
+    expect($response->id)->toBe($this->id);
+    expect($response->created_at)->toBe($this->date);
 
-    $this->mockRepository->shouldHaveReceived('insert')->times(1);
+    $this->mockRepository->shouldHaveReceived('getById')->times(1);
+    $this->mockRepository->shouldHaveReceived('update')->times(1);
     $this->mockCategoryRepositoryInterface->shouldNotHaveReceived('getIdsByListId');
     $this->mockGenreRepositoryInterface->shouldNotHaveReceived('getIdsByListId');
     $this->mockCastMemberRepositoryInterface->shouldNotHaveReceived('getIdsByListId');
@@ -102,7 +94,7 @@ test("execute -> exception", function ($data) {
     $this->mockCastMemberRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
     $this->mockGenreRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue());
 
-    $useCase = new CreateVideoUseCase(
+    $useCase = new UpdateVideoUseCase(
         repository: $this->mockRepository,
         repositoryCategory: $this->mockCategoryRepositoryInterface,
         repositoryGenre: $this->mockGenreRepositoryInterface,
@@ -115,16 +107,14 @@ test("execute -> exception", function ($data) {
     try {
 
         $useCase->execute(
-            input: new CreateVideoInput(
+            input: new UpdateVideoInput(
+                id: $this->id,
                 title: array_key_exists('name', $data) ? $data['name'] : 'testing',
                 description: $data['description'] ?? 'description',
-                yearLaunched: 2010,
-                duration: 50,
-                opened: true,
-                rating: 'L',
                 categories: $data['categories'] ?? [],
                 genres: $data['genres'] ?? [],
                 castMembers: $data['cast-members'] ?? [],
+                createdAt: $this->date,
             )
         );
         expect(false)->toBeTrue();
@@ -188,7 +178,7 @@ test("execute -> success with relationship", function ($data) {
     $this->mockGenreRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue($data['genres'] ?? []));
     $this->mockCastMemberRepositoryInterface->shouldReceive('getIdsByListId')->andReturn(mockKeyValue($data['cast-members'] ?? []));
 
-    $useCase = new CreateVideoUseCase(
+    $useCase = new UpdateVideoUseCase(
         repository: $this->mockRepository,
         repositoryCategory: $this->mockCategoryRepositoryInterface,
         repositoryGenre: $this->mockGenreRepositoryInterface,
@@ -199,16 +189,14 @@ test("execute -> success with relationship", function ($data) {
     );
 
     $response = $useCase->execute(
-        input: new CreateVideoInput(
+        input: new UpdateVideoInput(
+            id: $this->id,
             title: array_key_exists('name', $data) ? $data['name'] : 'testing',
             description: $data['description'] ?? 'description',
-            yearLaunched: 2010,
-            duration: 50,
-            opened: true,
-            rating: 'L',
             categories: $data['categories'] ?? [],
             genres: $data['genres'] ?? [],
             castMembers: $data['cast-members'] ?? [],
+            createdAt: $this->date,
         )
     );
 
@@ -216,7 +204,7 @@ test("execute -> success with relationship", function ($data) {
     expect($response->genres)->toBe(array_values($data['genres'] ?? []));
     expect($response->cast_members)->toBe(array_values($data['cast-members'] ?? []));
 
-    $this->mockRepository->shouldHaveReceived('insert')->times(1);
+    $this->mockRepository->shouldHaveReceived('update')->times(1);
     
     if ($data['categories'] ?? []) {
         $this->mockCategoryRepositoryInterface->shouldHaveReceived('getIdsByListId')->times(1);
@@ -273,7 +261,7 @@ test("execute -> success with relationship", function ($data) {
 ]);
 
 test('execute with files', function ($data) {
-    $useCase = new CreateVideoUseCase(
+    $useCase = new UpdateVideoUseCase(
         repository: $this->mockRepository,
         repositoryCategory: $this->mockCategoryRepositoryInterface,
         repositoryGenre: $this->mockGenreRepositoryInterface,
@@ -284,18 +272,16 @@ test('execute with files', function ($data) {
     );
 
     $response = $useCase->execute(
-        input: new CreateVideoInput(
+        input: new UpdateVideoInput(
+            id: $this->id,
             title: 'testing',
             description: 'description',
-            yearLaunched: 2010,
-            duration: 50,
-            opened: true,
-            rating: 'L',
             videoFile: $data['video-file'] ?? null,
             trailerFile: $data['trailer-file'] ?? null,
             bannerFile: $data['banner-file'] ?? null,
             thumbFile: $data['thumb-file'] ?? null,
             thumbHalf: $data['thumb-half'] ?? null,
+            createdAt: $this->date,
         )
     );
 

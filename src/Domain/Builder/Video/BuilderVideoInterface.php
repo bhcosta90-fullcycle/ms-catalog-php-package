@@ -9,6 +9,8 @@ interface BuilderVideoInterface
 {
     public function createEntity(object $input): Video;
 
+    public function addIds(object $input);
+
     public function addMediaVideo($filePath, MediaStatus $status): self;
 
     public function addMediaTrailer($filePath, MediaStatus $status): self;
