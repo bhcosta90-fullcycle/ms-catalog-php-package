@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BRCas\MV\UseCases\Video;
 
+use BRCas\CA\Repository\PaginateInterface;
 use BRCas\MV\Domain\Repository\VideoRepositoryInterface;
 
 class ListVideosUseCase
@@ -14,19 +15,8 @@ class ListVideosUseCase
         //
     }
 
-    public function execute(): DTO\ListVideosOutput
+    public function execute(): PaginateInterface
     {
-        $domains = $this->repository->paginate();
-
-        return new DTO\ListVideosOutput(
-            items: $domains->items(),
-            total: $domains->total(),
-            last_page: $domains->lastPage(),
-            first_page: $domains->firstPage(),
-            current_page: $domains->currentPage(),
-            per_page: $domains->perPage(),
-            to: $domains->to(),
-            from: $domains->from(),
-        );
+        return $this->repository->paginate();
     }
 }
