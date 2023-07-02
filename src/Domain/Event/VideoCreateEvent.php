@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BRCas\MV\Domain\Event;
 
 use BRCas\CA\Domain\Events\DTO\PayloadEventOutputInterface;
@@ -20,7 +22,7 @@ class VideoCreateEvent implements EventInterface
     public function payload(): PayloadEventOutputInterface
     {
         return new DTO\VideoCreateEvent(
-            id: $this->video->id,
+            id: $this->video->id(),
             pathVideo: $this->video->videoFile()?->path,
             pathTrailer: $this->video->trailerFile()?->path,
         );

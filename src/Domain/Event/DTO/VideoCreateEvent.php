@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BRCas\MV\Domain\Event\DTO;
 
 use BRCas\CA\Domain\Events\DTO\PayloadEventOutputInterface;

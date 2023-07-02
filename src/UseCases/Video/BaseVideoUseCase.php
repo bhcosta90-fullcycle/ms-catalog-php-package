@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BRCas\MV\UseCases\Video;
 
 use BRCas\CA\Domain\Exceptions\EntityNotFoundException;

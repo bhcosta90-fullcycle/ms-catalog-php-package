@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BRCas\MV\Domain\Builder\Video;
 
 use BRCas\MV\Domain\Entity\Video;
