@@ -51,7 +51,9 @@ class Video extends EntityAbstract
 
     public function addCategory(string $category)
     {
-        array_push($this->categories, $category);
+        if (!in_array($category, $this->categories)) {
+            array_push($this->categories, $category);
+        }
     }
 
     public function removeCategory(string $category)
@@ -64,7 +66,9 @@ class Video extends EntityAbstract
 
     public function addGenre(string $genre)
     {
-        array_push($this->genres, $genre);
+        if(!in_array($genre, $this->genres)) {
+            array_push($this->genres, $genre);
+        }
     }
 
     public function removeGenre(string $genre)
@@ -77,7 +81,9 @@ class Video extends EntityAbstract
 
     public function addCastMember(string $castMember)
     {
-        array_push($this->castMembers, $castMember);
+        if(!in_array($castMember, $this->castMembers)) {
+            array_push($this->castMembers, $castMember);
+        }
     }
 
     public function removeCastMember(string $castMember)

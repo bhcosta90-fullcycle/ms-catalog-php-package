@@ -13,7 +13,7 @@ class UpdateVideoUseCase extends BaseVideoUseCase
     {
         return new UpdateBuilderVideo;
     }
-    
+
     public function execute(DTO\UpdateVideoInput $input): DTO\VideoOutput
     {
         try {
@@ -27,8 +27,9 @@ class UpdateVideoUseCase extends BaseVideoUseCase
 
             $this->builder->createEntity($entity);
             $this->builder->addIds($input);
+
             $files = $this->store($input);
-            
+
             $this->repository->update($this->builder->getEntity());
 
             if (!empty($files['video-file']) || !empty($files['trailer-file'])) {

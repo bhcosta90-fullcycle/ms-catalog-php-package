@@ -32,12 +32,30 @@ class CreateBuilderVideo implements BuilderVideoInterface
     }
 
     public function addIds(object $input) {
+        foreach ($this->entity->categories as $category) {
+            if (!in_array($category, $input->categories)) {
+                $this->entity->removeCategory($category);
+            }
+        }
+
+        foreach ($this->entity->genres as $genre) {
+            if (!in_array($genre, $input->categories)) {
+                $this->entity->removeGenre($genre);
+            }
+        }
+        
+        foreach ($this->entity->castMembers as $castMember) {
+            if (!in_array($castMember, $input->castMembers)) {
+                $this->entity->removeCastMember($castMember);
+            }
+        }
+
         foreach ($input->categories as $category) {
             $this->entity->addCategory($category);
         }
 
-        foreach ($input->genres as $genres) {
-            $this->entity->addGenre($genres);
+        foreach ($input->genres as $genre) {
+            $this->entity->addGenre($genre);
         }
 
         foreach ($input->castMembers as $castMember) {
