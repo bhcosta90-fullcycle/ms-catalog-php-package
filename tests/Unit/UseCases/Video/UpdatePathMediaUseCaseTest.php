@@ -104,3 +104,4 @@ test("I'm trying update a trailer with a media file", function () {
 
     $this->mockRepository->shouldHaveReceived('updateMedia')->times(1);
 });
+
