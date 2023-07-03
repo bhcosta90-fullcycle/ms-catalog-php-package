@@ -5,8 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "BRCas\\MV\\": "src/",
-            "BRCas\\CA\\": "shared/src/"
+            "BRCas\\MV\\": "src/"
         }
     },
     "authors": [
@@ -17,7 +16,8 @@
     ],
     "require": {
         "ramsey/uuid": "^4.7",
-        "rakit/validation": "^1.4"
+        "rakit/validation": "^1.4",
+        "bhcosta90/php-shared": "^1.0"
     },
     "scripts": {
         "test": [
@@ -39,5 +39,11 @@
             "pestphp/pest-plugin": true,
             "infection/extension-installer": true
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/bhcosta90-fullcycle/php-shared"
+        }
+    ]
 }
